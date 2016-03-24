@@ -1,0 +1,27 @@
+{block content}
+{block head}
+	<link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/signin.css">
+{/block}
+                {snippet signInForm}
+                    {form signInForm, class => "form-signin"}
+                    <img class="img-responsive login-logo" src="{$basePath}/img/logo.png" alt="">
+
+                        <div class="bs-callout bs-callout-danger" n:if="$form->hasErrors()">
+                            <h4>Fill form correctly!</h4>
+                            <ul class=error n:if="$form->hasErrors()">
+                                <li n:foreach="$form->errors as $error">{$error}</li>
+                            </ul>
+                        </div>
+
+                        {input username, class => "form-control", placeholder => "Login", required, autofocus => true} <span class=error n:ifcontent>{$form['username']->error}</span>
+                        
+                        {input password, class => "form-control", placeholder => "Password", required} <span class=error n:ifcontent>{$form['password']->error}</span>
+                       
+                            {label remember, class => "checkbox"} {input remember} {/label}
+                      
+                            {input send, class => "btn btn-lg btn-myColor btn-block"}
+
+                    {/form}
+                  {/snippet}
+
+{* or use {include '../components/form.latte', form => signInForm} *}

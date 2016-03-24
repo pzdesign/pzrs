@@ -1,0 +1,93 @@
+html,body {
+    padding-top: 0px;
+    padding-bottom: 0px !important;
+    background-color: #F1F1F1;
+    min-height: 100vh !important;
+}
+
+
+.wrapper-content {
+  padding-top:0px;
+    text-align: center;
+    position: relative;
+    margin: 0 auto;
+    top: 20vh ;
+    max-height: 70vh !important;
+
+    width: 100%;
+    max-width: 1140px;
+    display: block;
+    background-color: #FFF;
+}
+
+.form-signin {
+
+    max-width: 400px;
+    padding: 15px;
+    margin: 40px auto;
+    margin-top: 0px;
+    margin-bottom:100px;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+
+}
+
+
+input[type=email], input[type=number], input[type=text], input[type=url], input[type=password], textarea {
+    width: 100%;
+    padding: 9px 1.5%;
+    background: #E8EBF6;
+    margin: 15px 0;
+    border-radius: 3px;
+    border: none;
+    -webkit-transition: background .20s;
+    -moz-transition: background .20s;
+    transition: background .20s;
+}
+
+
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+    background-color: #FFFFFF !important;
+    color: #555 !important;
+    -webkit-box-shadow: 0 0 0 1000px #CFD8DC inset !important;
+    -webkit-text-fill-color: #555555 !important;
+    }
+
+
+input:-webkit-autofill:focus {
+    background-color: #FFFFFF !important;
+    color: #555 !important;
+    -webkit-box-shadow: 0 0 0 1000px #ECEFF1 inset !important;
+    -webkit-text-fill-color: #555555 !important;
+    }
+
+.login-logo {
+  margin:20px auto;
+}    

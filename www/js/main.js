@@ -1,0 +1,75 @@
+function tmce(){
+  tinymce.init({
+    selector: "textarea",
+    height: 200,
+plugins: [
+    'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+    'searchreplace wordcount visualblocks visualchars code fullscreen',
+    'insertdatetime media nonbreaking save table contextmenu directionality',
+    'emoticons template paste textcolor colorpicker textpattern imagetools'
+  ],
+  toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+  toolbar2: 'print preview media | forecolor backcolor emoticons fontsizeselect',
+
+  fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt',
+  font_formats: 'Arial=arial,helvetica,sans-serif;Courier New=courier new,courier,monospace;AkrutiKndPadmini=Akpdmi-n',
+    setup: function (editor) {
+        editor.on('change', function () {
+            editor.save();
+        });
+    }
+});
+};
+
+
+
+$.nette.ext('testt',{
+    init: function(){
+    tmce();
+
+               //    alert('init');
+    },
+    load:function(){
+    $("#snippet--flashMessages").delay(2000).hide(500);  
+    $("#snippet--flashMessages").show();
+
+    } ,              
+    
+    before: function(xrh, settings){
+      //  alert('BEFORE');
+      // tinymce.remove();
+ 
+    },
+    success: function(payload){ 
+      if(payload.resetForm){
+        tinymce.remove();
+        tmce();
+        $('#addPostForm').modal('hide');  
+      }
+      if(payload.resetForm2){
+        tinymce.remove();
+        tmce();
+
+      }
+
+$('.tltp').tooltip({
+    placement: 'top',
+    html: true
+});
+    $("#snippet--flashMessages").delay(2000).hide(500);    
+    }
+});  
+
+
+$('.tltp').tooltip({
+    placement: 'top',
+    html: true
+});
+
+
+$(function(){
+    $.nette.init();
+});
+
+
+

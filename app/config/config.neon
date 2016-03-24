@@ -1,0 +1,37 @@
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# https://nette.org/security-warning
+
+parameters:
+
+database:
+    default:
+        dsn:          "mysql:host=127.0.0.1;dbname=pzrs"
+        user:         "root"
+        password:     ""
+
+
+php:
+	date.timezone: Europe/Prague
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+
+
+services:
+	router: App\RouterFactory::createRouter
+	authenticator: MyAuthenticator
+	pm:
+		class: App\Model\PostsManager
+		inject: yes
+
+#security:
+    #users:
+        #admin: secret  # user 'admin', password 'secret'
+

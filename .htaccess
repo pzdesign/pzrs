@@ -1,0 +1,10 @@
+php_value memory_limit 128M
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteRule ^$ /pzrs/www/ [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_URI} !^/pzrs/www/
+	RewriteRule ^(.*)$ /pzrs/www/$1
+
+</IfModule>

@@ -1,0 +1,176 @@
+{block content}
+
+<script>
+/*
+function closeForm(){
+    $('#addPostForm').modal('hide');  
+}
+*/
+
+
+
+function moveUpload(img){
+  $( "#uploadImgName" ).val( img );
+}
+
+
+
+
+</script>
+{snippet postsList} 
+
+      <!-- Main component for a primary marketing message or call to action -->
+<div class="wrapper-admin">   
+<h2>Články</h2>
+
+
+    <button class="btn btn-success pull-left" role="button" data-toggle="modal" data-target="#addPostForm">Přidat</button>
+
+    <table id="postsTable" class="table table-striped"> 
+    <thead> 
+
+    <tr> 
+    <th>id</th> 
+    <th>Titulek</th> 
+    <th class="hidden-xs">Vyt.</th> 
+    <th class="hidden-xs">Edit.</th> 
+    {*<th class="hidden-xs">Autor</th>*}
+    <th>Img</th>         
+    <th>Edit</th>
+    <th>Active</th>
+    <th>Del</th> 
+    </tr> 
+    </thead> 
+    <tbody> 
+<p id="demo"></p>
+    {if $posts->fetch() == false}
+    <div class="alert alert-danger">Nemám žádné příspěvky</div>
+    {else} 
+    {foreach $posts as $key => $post}
+    <tr> 
+    <td>{$post->id}</td> 
+    <td>{$post->title}</td> 
+    <td class="hidden-xs datetime">{$post->created_at|date:'j.n.Y'}<br>{$post->created_at|date:'H:i:s'}</td> 
+    <td class="hidden-xs datetime">{$post->edited_at|date:'j.n.Y'}<br>{$post->edited_at|date:'H:i:s'}</td> 
+    {*<td class="hidden-xs datetime">{$post->autor}</td>*}
+    <td > 
+    {if file_exists($absImagePath. '/' .$posts[$key]->img) && $posts[$key]->img != null}
+<img src="{$basePath}/{$post->img}" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/{$post->img}">'>
+
+    {else}
+<img src="{$basePath}/img/empty.png" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/img/empty.png">'>
+  
+    {/if}
+    </td>  
+    <td><a n:href="Admin:editPost $post->id" class="btn btn-primary btn-sm tltp" title="Edit Post"><i class="fa fa-pencil"></i></a></td>        
+    <td>
+
+    {if $post->active == 1}
+    <a n:href="inactive! $post->id" class="btn btn-success btn-sm ajax tltp" title="Hide post">
+    <i class='fa fa-eye'></i>
+    </a>
+
+    {else}
+
+    <a n:href="active! $post->id" class="btn btn-warning btn-sm  ajax tltp" title="Show post">
+    <i class='fa fa-eye-slash'></i>
+    </a>{/if}</td>
+
+    <td><a class="btn btn-danger btn-sm tltp" title="Delete post"
+data-confirm="modal"
+data-confirm-title="Smazat tento článek"
+data-confirm-text="Delete?"
+data-confirm-ok-class="btn-danger"
+data-confirm-ok-text="Delete"
+data-confirm-cancel-class="btn-success"
+data-confirm-cancel-text="Cancel"
+class="btn btn-danger btn-mini pull-right"
+data-ajax="on"
+n:href="removePost! $post->id"><i class="fa fa-trash"></i></a></td>                  
+    
+    </tr>
+    {/foreach} 
+ 
+    {/if}       
+
+
+    </tbody> 
+    </table>  
+
+    <div style="text-align: center">
+        <ul n:snippet="pagi" class="pagination" style="margin: 0 0 20px;">
+            <li {if $paginator->first}class="disabled"{/if}><a class="ajax {if $paginator->first == false}disabled{/if}" n:href="change! $paginator->getPage()-1">&laquo;</a></li>
+            {for $i = 1; $i <= $paginator->pageCount; $i++}<li {if $paginator->getPage() == $i}class="active"{/if}><!--PAGE--><a class="ajax" n:href="change! $i">{$i}</a></li>{/for}
+            <li {if $paginator->last}class="disabled"{/if}><a class="ajax {if $paginator->last == false}disabled{/if}" n:href="change! $paginator->getPage()+1">&raquo;</a></li>
+        </ul>
+    </div>  
+
+
+</div>
+</div>
+{/snippet} 
+
+    <div class="modal fade" id="addPostForm" tabindex="-1" role="dialog" aria-labelledby="addPostForm" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4>Přiadat článek </h4>
+                </div>                  
+                 {snippet uploadForm}
+                 {if $checkAddFormValid} TRUE2 {else}FALSE2{/if}
+                    {form addPostFormUpload, class => ajax}   
+                        {input img, class => "form-control pull-left", placeholder => "Foto: "}      <br>  
+                        {input upload, class => "btn btn-info uploadButton pull-left"}                                            
+                    {/form}
+{if $uploadDone || $checkAddFormValid} 
+
+    <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$imgName}">
+    <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$imgName}   </div>
+
+<script>
+    moveUpload({$imgName});
+</script>
+
+{else}
+    <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/img/empty.png">
+    <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br></div>
+
+{/if}
+
+{/snippet}                             
+        {snippet addPostForm} 
+                    {form addPostForm, class => ajax}                
+                    <div class="modal-body">
+<!-- Jednoduché vykreslení chyb -->
+<ul class="alert-relative alert-danger animated flash" n:if="$form->hasErrors()">
+        <li n:foreach="$form->errors as $error">{$error}</li>
+</ul>
+                        {input img, class => "form-control", placeholder => "Foto: ",readonly} <br>
+
+                        {input title, class => "form-control", placeholder => "Titulek: ", required, autofocus => true}<br> 
+                        
+                        {input teaser, class => "form-control", placeholder => "Náhled: ", required} <br>
+                 
+                        {input body, class => "form-control", placeholder => "Obsah: "}<br>  
+                        {input slug}  <br>                    
+                        
+                    </div>                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Zavřít</button>
+                        {input submit, class => "btn btn-success mySubmit "}
+
+                    </div>
+             {/form}          
+        {/snippet}                      
+            </div><!-- /.modal-content -->
+   
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->  
+<div>
+
+
+
+{/block}
+
+

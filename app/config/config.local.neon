@@ -1,0 +1,8 @@
+parameters:
+
+
+database:
+    default:
+        dsn:          "mysql:host=127.0.0.1;dbname=pzrs"
+        user:         "root"
+        password:     ""
