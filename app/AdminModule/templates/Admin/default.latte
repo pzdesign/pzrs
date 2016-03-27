@@ -24,8 +24,10 @@ function moveUpload(img){
 <h2>Články</h2>
 
 
-    <button class="btn btn-success pull-left" role="button" data-toggle="modal" data-target="#addPostForm">Přidat</button>
-
+    <button class="btn btn-success" role="button" data-toggle="modal" data-target="#addPostForm">Přidat</button><br>
+    {if $posts->fetch() == false}
+    <div class="alert-relative alert-danger">Nemám žádné příspěvky</div>
+    {else} 
     <table id="postsTable" class="table table-striped"> 
     <thead> 
 
@@ -43,9 +45,7 @@ function moveUpload(img){
     </thead> 
     <tbody> 
 <p id="demo"></p>
-    {if $posts->fetch() == false}
-    <div class="alert alert-danger">Nemám žádné příspěvky</div>
-    {else} 
+
     {foreach $posts as $key => $post}
     <tr> 
     <td>{$post->id}</td> 
@@ -91,7 +91,7 @@ n:href="removePost! $post->id"><i class="fa fa-trash"></i></a></td>
     </tr>
     {/foreach} 
  
-    {/if}       
+        
 
 
     </tbody> 
@@ -107,6 +107,7 @@ n:href="removePost! $post->id"><i class="fa fa-trash"></i></a></td>
 
 
 </div>
+ {/if}  
 </div>
 {/snippet} 
 

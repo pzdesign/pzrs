@@ -1,0 +1,35 @@
+{block content}
+
+<div class="wrapper-admin">      
+<h2>Edit Result</h2>
+<div class="row">
+
+{snippet editPostForm}
+    {form editPostForm, class => ajax}                
+        <div class="col-sm-12">   
+            <div class="col-sm-6"> 
+                <div class="col-sm-12">                        
+                    {label teamA /}                       
+                    {input teamA, class => "form-control col-lg-6", placeholder => "Team A: ", required, autofocus => true} <br>  
+                </div>        
+            </div>
+            <div class="col-sm-6"> 
+                <div class="col-sm-12">                        
+                    {label teamB /}                       
+                    {input teamB, class => "form-control col-lg-6", placeholder => "Team B: ", required, autofocus => true} <br>  
+                </div>      
+            </div>     
+        </div>
+<br><br><br><br><br>
+        <div class="col-sm-12"> 
+          {input submit, class => "btn btn-success "}
+          {input cancel, class => "btn btn-danger "}
+        </div> 
+
+    </div>         
+    {/form}
+{/snippet} 
+</div>                  
+{/block}
+
+

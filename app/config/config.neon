@@ -16,8 +16,6 @@ php:
 
 application:
 	errorPresenter: Error
-	mapping:
-		*: App\*Module\Presenters\*Presenter
 
 
 session:
@@ -27,9 +25,10 @@ session:
 services:
 	router: App\RouterFactory::createRouter
 	authenticator: MyAuthenticator
-	pm:
-		class: App\Model\PostsManager
-		inject: yes
+	pm:	App\Model\PostsManager
+	rm:	App\Model\ResultsManager
+	tm:	App\Model\TeamsManager
+	em:	App\Model\EnemyManager
 
 #security:
     #users:

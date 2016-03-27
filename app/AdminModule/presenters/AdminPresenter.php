@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presenters;
+namespace AdminModule;
 
 use Nette,
     Nette\Application\UI,
@@ -9,8 +9,6 @@ use Nette,
     Nette\Utils\Image,
 	Nette\Utils\Strings,
 	Nette\Utils\Finder;
-
-use App\Model\PostsManager;
 
 class AdminPresenter extends BasePresenter
 {
@@ -22,10 +20,12 @@ class AdminPresenter extends BasePresenter
 	private $postAdded;
 	private $imgCached;
 
-    public function injectPostsManager(PostsManager $pm){
-	$this->pm = $pm;
-    }
-
+	public function startup() {
+		parent::startup();
+        if (!$this->getUser()->isLoggedIn()) {
+            $this->redirect('Sign:in');
+        }		
+	}
 
     public function actionDefault($page = 1){
 	$paginator = new Nette\Utils\Paginator;
@@ -35,7 +35,7 @@ class AdminPresenter extends BasePresenter
 	$length = $paginator->getLength();
 	
 	if($page < 1 || $page > $length){
-	    $this->flashMessage("Stránka musí být mezi 1 a $length.");
+	    //$this->flashMessage("Stránka musí být mezi 1 a $length.");
 	    $paginator->setPage(1);
 	}
 	$this->paginator = $paginator;
@@ -55,9 +55,7 @@ class AdminPresenter extends BasePresenter
 
 	public function renderDefault($postId)
 	{
-        if (!$this->getUser()->isLoggedIn()) {
-            $this->redirect('Sign:in');
-        }
+
 
 		$this->template->absImagePath = $this->context->parameters['wwwDir'];        
 		$this->template->paginator = $this->paginator;
@@ -92,7 +90,8 @@ class AdminPresenter extends BasePresenter
     protected function createComponentAddPostForm(){
 	$form = new Form;
 	
-	$form->addText("title", 'Titulek:')->setRequired("Nevyplnili jste všechna políčka");
+	$form->addText('title', 'Titulek:')
+			->setRequired("Nevyplnili jste všechna políčka");
 
 	$form->addText("teaser")->setRequired("Nevyplnili jste všechna políčka");
 
@@ -168,8 +167,8 @@ class AdminPresenter extends BasePresenter
 	    $this->redirect("this");
 	}
 	$values = $form->getValues();
-	$dir = 'upload/storage/';
-	$uploadDir = 'upload/';
+	$dir = 'upload/posts/storage/';
+	$uploadDir = 'upload/posts/';
 
 	$name = $values->img->getName();
     $path = $dir.$name;
@@ -289,9 +288,7 @@ class AdminPresenter extends BasePresenter
 
     public function actionEditPost($id)
     {
-        if (!$this->getUser()->isLoggedIn()) {
-            $this->redirect('Sign:in');
-        }
+
 		$this->template->absImagePath = $this->context->parameters['wwwDir']; 
  		$this->template->checkAddFormValid = true; 
         $this->template->imgName = null;
@@ -423,8 +420,8 @@ class AdminPresenter extends BasePresenter
   public function handleMoveStorageFile()
     {
     	$postId = $this->getParameter("id");
-    	$dir = 'upload/storage';
-    	$dirNew = 'upload/';
+    	$dir = 'upload/posts/storage';
+    	$dirNew = 'upload/posts/';
     	if($postId) {
     		$post = $this->pm->getById($postId)->fetch();    		
     	}

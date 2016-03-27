@@ -1,13 +1,21 @@
 <?php 
 namespace App\Model;
 
+use Nette;
+
 abstract class TableManager extends \Nette\Object {
     
+
     private $connection;
     protected $tableName;
-    
+
+
     public function __construct(\Nette\Database\Context $connection) {
-	$this->connection = $connection;
+        $this->connection = $connection;        
+        if ($this->tableName === NULL) {
+            $class = get_class($this);
+            throw new Nette\InvalidStateException("Name of the table has to be define in $class::\$tableName.");
+        }
     }
     
     protected function getTable(){
@@ -16,18 +24,23 @@ abstract class TableManager extends \Nette\Object {
     }
     
     public function findAll(){
-	return $this->getTable();
+	   return $this->getTable();
     }
 
     public function getCount(){
-    return $this->getTable()->count();
+        return $this->getTable()->count();
     }   
 
     public function findBy(array $by){
-	return $this->getTable()->where($by);
+	   return $this->getTable()->where($by);
     }
 
+    public function findByOne(array $by){
+        return $this->getTable()->where($by)->limit(1)->fetch();
+    }
+
+
     public function findAllVisible(){
-    return $this->getTable()->where('active = ?', 1);
+        return $this->getTable()->where('active = ?', 1);
     }   
 }

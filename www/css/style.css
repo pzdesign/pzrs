@@ -56,6 +56,7 @@ h2 {
     font-family: 'Lato-300' !important;
     margin:0px;
     font-size: 26px;
+    padding-bottom:20px;
 }
 h3 {
     font-size: 1.5em;
@@ -854,7 +855,7 @@ color: #FFF;
 .alert-relative {
     list-style:none;
     position: relative;
-    z-index: 9999;
+
     top: 0px;
     max-width: 800px;
     width: 100%;
@@ -899,16 +900,29 @@ color: #FFF;
 #frm-addPostFormUpload {
   padding-left:4%;
   padding-right:4%;
-  margin: 20px auto;
+  margin: 0px auto;
 }
 
-#frm-addPostFormUpload input[type="file"] {
+
+
+#frm-addPostFormUploadA {
+  padding-left:4%;
+  padding-right:4%;
+  margin: 0px auto;
+}
+
+#frm-teamALogoUpload input[type="file"] {
     position: relative;
-    width: 80%;
-    margin: 20px auto;
-
-
+    width: 100%;
+    margin: 00px auto;
 }
+
+#frm-teamBLogoUpload input[type="file"] {
+    position: relative;
+    width: 100%;
+    margin: 00px auto;
+}
+
 #frm-addPostFormUpload input[type="submit"] {
     position: relative;
     width: 20%;
@@ -951,4 +965,39 @@ color: #FFF;
 .modal .modal-dialog {
   width:80vw;
   max-width:900px;
+}
+
+
+#frm-teamALogoUpload  .col-sm-8 {
+  width:70%;
+  padding-left: 15px !important;
+  padding-right: 0px !important;
+  margin: 0px;
+
+}
+
+#frm-teamALogoUpload  .col-sm-4 {
+    width:30%;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+    margin: 0px;
+}
+
+#frm-teamBLogoUpload  .col-sm-8 {
+  width:70%;
+  padding-left: 15px !important;
+  padding-right: 0px !important;
+  margin: 0px;
+}
+
+#frm-teamBLogoUpload  .col-sm-4 {
+    width:30%;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+    margin: 0px;
+}
+
+
+.logoUploadForm {
+  margin-top:20px;
 }

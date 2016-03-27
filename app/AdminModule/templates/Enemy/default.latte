@@ -1,0 +1,182 @@
+{block content}
+
+<script>
+/*
+function closeForm(){
+    $('#addPostForm').modal('hide');  
+}
+*/
+
+function moveUploadA(img){
+  $( "#uploadImgNameA" ).val( img );
+}
+
+</script>
+{snippet postsList} 
+<!-- Main component for a primary marketing message or call to action -->
+<div class="wrapper-admin">   
+    <h2>Enemy</h2>
+    <button class="btn btn-success " role="button" data-toggle="modal" data-target="#addPostForm">Add</button><br>
+
+            {if $posts->fetch() == false}
+            <div class="alert-relative alert-danger">Nothing :(</div>
+            {else} 
+    <table id="postsTable" class="table table-striped"> 
+        <thead> 
+
+            <tr> 
+                <th>id</th> 
+                <th class="hidden-xs">Created</th> 
+                <th>Name</th>        
+                <th>Logo</th>   
+                <th>Edit</th> 
+                <th>Active</th>
+                <th>Del</th> 
+            </tr> 
+        </thead> 
+        <tbody> 
+            <p id="demo"></p>
+
+            {foreach $posts as $key => $post}
+            <tr> 
+                <td>{$post->id}</td> 
+
+                <td class="hidden-xs datetime">{$post->created_at|date:'j.n.Y'}<br>{$post->created_at|date:'H:i:s'}</td> 
+                {*<td class="hidden-xs datetime">{$post->autor}</td>*}
+                <td>{$post->teamA}</td>
+                <td> 
+                    {if file_exists($absImagePath. '/' .$posts[$key]->teamALogo) && $posts[$key]->teamALogo != null}
+                    <img src="{$basePath}/{$post->teamALogo}" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/{$post->teamALogo}">'>
+                    {else}
+                    <img src="{$basePath}/img/empty.png" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/img/empty.png">'>
+                    {/if}    
+                </td>                      
+            <td><a n:href="Enemy:editPost $post->id" class="btn btn-primary btn-sm tltp" title="Edit Post"><i class="fa fa-pencil"></i></a></td>        
+            <td>
+                {if $post->active == 1}
+                <a n:href="inactive! $post->id" class="btn btn-success btn-sm ajax tltp" title="Hide post">
+                    <i class='fa fa-eye'></i>
+                </a>
+
+                {else}
+
+                <a n:href="active! $post->id" class="btn btn-warning btn-sm  ajax tltp" title="Show post">
+                    <i class='fa fa-eye-slash'></i>
+                </a>{/if}
+            </td>
+
+                <td><a class="btn btn-danger btn-sm tltp" title="Delete post"
+                    data-confirm="modal"
+                    data-confirm-title="Smazat tento článek"
+                    data-confirm-text="Delete?"
+                    data-confirm-ok-class="btn-danger"
+                    data-confirm-ok-text="Delete"
+                    data-confirm-cancel-class="btn-success"
+                    data-confirm-cancel-text="Cancel"
+                    class="btn btn-danger btn-mini pull-right"
+                    data-ajax="on"
+                    n:href="removePost! $post->id"><i class="fa fa-trash"></i></a></td>                  
+
+                </tr>
+                {/foreach} 
+
+                      
+
+
+            </tbody> 
+        </table>  
+
+        <div style="text-align: center">
+            <ul n:snippet="pagi" class="pagination" style="margin: 0 0 20px;">
+                <li {if $paginator->first}class="disabled"{/if}><a class="ajax {if $paginator->first == false}disabled{/if}" n:href="change! $paginator->getPage()-1">&laquo;</a></li>
+                {for $i = 1; $i <= $paginator->pageCount; $i++}<li {if $paginator->getPage() == $i}class="active"{/if}><!--PAGE--><a class="ajax" n:href="change! $i">{$i}</a></li>{/for}
+                <li {if $paginator->last}class="disabled"{/if}><a class="ajax {if $paginator->last == false}disabled{/if}" n:href="change! $paginator->getPage()+1">&raquo;</a></li>
+            </ul>
+        </div>  
+ {/if}
+
+    </div>
+</div>
+{/snippet} 
+
+<div class="modal fade" id="addPostForm" tabindex="-1" role="dialog" aria-labelledby="addPostForm" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2>Add new Team</h2>
+            </div>
+       <div class="modal-body">                 
+        <div class="row">             
+            <div class="col-sm-12 logoUploadForm">
+                <div class="col-sm-6 col-sm-offset-3">              
+                    {snippet teamALogoForm}                
+                        {form teamALogoUpload, class => ajax} 
+                            <div class="col-sm-8">                  
+                                <div class="form-group {if $form['teamALogo']->error || $teamALogoFormFail}has-error{else}{/if} ">                      
+                                    {input teamALogo, class => "form-control pull-left", placeholder => "Foto: "}
+                                    <span class="text-danger" n:ifcontent>{$form['teamALogo']->error|noescape}</span>                        
+                                </div>  
+                                <div class="form-group">                      
+                                </div>                                                  
+                            </div>
+                            <div class="col-sm-4">
+                                {input uploadA, class => "btn btn-default "}         
+                            </div>         
+                        {/form}    
+                        {if $teamALogoUploadClick }
+                                <script>
+                                    moveUploadA({$teamALogoName});
+                                </script>
+                            {if $teamALogoUploadDone && $teamALogoName} 
+
+                                <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$teamALogoName}">
+                                <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$teamALogoName}   </div>
+                            {else}
+                                <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/img/empty.png">
+                                <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br></div>
+
+                            {/if}
+                        {/if} 
+                    {/snippet}                 
+                </div>
+            </div>
+        </div>
+</div>
+            {snippet addNewResultSnippet} 
+            {form addNewResultForm, class => ajax}                
+            <div class="modal-body">
+              {*
+                <ul class="alert-relative alert-danger animated flash" n:if="$form->hasErrors()">
+                    <li n:foreach="$form->errors as $error">{$error}</li>
+                </ul>  
+                *}
+                <div class="row">                  
+                    <div class="col-sm-12">   
+                        <div class="col-sm-6 col-sm-offset-3"> 
+                        <div class="form-group {if $form['teamA']->error}has-error{else}{/if} ">                                                         
+                            {label teamA /}                       
+                            {input teamA, class => "form-control col-lg-6", placeholder => "Team Name: ", required, autofocus => true} <br>  
+                            <span class="text-danger" n:ifcontent>{$form['teamA']->error|noescape}</span>
+                        </div>
+                        <div class="col-sm-12">
+                                {label logoTeamA /}                       
+                                {input logoTeamA, class => "form-control", placeholder => "Result A: ", required} <br> 
+                        </div>          
+                        </div>    
+                    </div>
+                </div>
+            </div>                    
+            <div class="modal-footer">
+                {input submit, class => "btn btn-success mySubmit"} 
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Zavřít</button> 
+            </div>
+            {/form}          
+            {/snippet}                      
+        </div><!-- /.modal-content -->
+
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->  
+{/block}
+
+

@@ -12,7 +12,7 @@
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
 
-	<title>{ifset title}{include title|striptags} | {/ifset}Restaurace Zahrada</title>
+	<title>{ifset title}{include title|striptags} | {/ifset}Iron Branch</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{$basePath}/css/animate.min.css" rel="stylesheet">    
@@ -32,8 +32,9 @@
   <body id="main" data-spy="scroll">
 
     <!-- Static navbar -->
+ {if $user->isLoggedIn()}   
     <div class="navbar navbar-inverse navbar-static-top">
-      <div class="container mw">
+      <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -44,48 +45,31 @@
           <a class="navbar-brand page-scroll" href="#main" onclick="main()">PZ-CMS</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse ">
+{if $user->isLoggedIn()}
           <ul class="nav navbar-nav navbar-left mw">
-            <li><a href="{link Homepage:}"><i class="fa fa-eye"></i> &nbsp; Náhled</a></li>         
-          </ul>
+            <li><a href="{link :Admin:Admin:default}">Admin</a></li>         
+          </ul>  
+{/if}      
 
-
-          <ul class="nav navbar-nav navbar-right mw">
-            <li><a href="#"><i class="fa fa-home"></i>&nbsp;Přehled</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <i class="fa fa-cubes"></i> &nbsp;Obsah&nbsp;<span class="caret"></span></a></a>
-              <ul class="dropdown-menu">
-                <li><a href="#"><i class="fa fa-file-text-o"></i>&nbsp;Články</a></li>
-                <li><a href="#"><i class="fa fa-calendar"></i>&nbsp;Akce</a></li>
-              </ul>
-            </li>            
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cog"></i> &nbsp;Nastavení&nbsp;<span class="caret"></span></a></a>
-              <ul class="dropdown-menu">
-                <li><a href="#"><i class="fa fa-plug"></i>&nbsp;Propojení</a></li>
-                <li><a href="#"><i class="fa fa-pencil-square-o"></i>&nbsp;Vzhled</a></li>
-              </ul>
-            </li>
-
-            <li><a href="{link Sign:out}">Odhlásit se &nbsp;  <i class="fa fa-sign-out"></i></a></li>         
-          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
-
+{/if}  
 
 <div class="wrapper-content">
   <!--FLASHES-->
-  
   {snippet flashMessages}
-
-  <div n:foreach="$flashes as $flash" class="alert flash alert-{$flash->type} animated fadeInDown"> 
+    <script>
+      $("#snippet--flashMessages").show();
+      $("#snippet--flashMessages").delay(2000).hide(500);
+    </script>  
+  <div n:foreach="$flashes as $flash" class="alert flash alert-{$flash->type} animated fadeInDown">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
   {$flash->message}
   </div>
-  {/snippet}   
+  {/snippet}      
 		{include content}
-</div> <!-- /container -->
+    </div> <!-- /container -->
 
 	{block scripts}
     <!-- Bootstrap core JavaScript
@@ -93,19 +77,11 @@
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="{$basePath}/js/jquery.min.js"></script>
 	<script src="https://nette.github.io/resources/js/netteForms.min.js"></script>	
-  <!-- TINY MCE -->
-  <script src="{$basePath}/js/tinymce/tinymce.min.js "></script>
-
+	<script src="{$basePath}/js/nette.ajax.js"></script>	
 	<script src="{$basePath}/js/bootstrap.min.js"></script>
   <script src="{$basePath}/js/jquery.easing.min.js"></script>
   <script src="{$basePath}/js/scrolling-nav.js"></script>    
-
-  <script src="{$basePath}/js/nette.ajax.js"></script> 
-  <script src="{$basePath}/js/netteForms.js"></script>  
-  <script src="{$basePath}/js/confirm.dialog.js"></script>   
-  <script src="{$basePath}/js/main.js"></script>  
-
- 
+	<script src="{$basePath}/js/main.js"></script>
   	{/block}
 
 </body>

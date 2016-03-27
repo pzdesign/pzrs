@@ -1,17 +1,15 @@
 <?php 
 namespace App\Model;
 
-class PostsManager extends TableManager {
+class ResultsManager extends TableManager {
 
-    /** @var Nette\Database\Context */
     private $connection;
-    protected $tableName = 'pzrs_posts';    
-
-
+    protected $tableName = 'pzrs_matches';
 
     public function getPostsLimited($limit, $offset) {
         return $this->findAll()->limit($limit, $offset);
     }
+
 
     public function getAllPosts() {
         return $this->findAll();
@@ -29,18 +27,21 @@ class PostsManager extends TableManager {
     public function getById($id){
     return $this->findBy(array('id' => $id));
     }
+
+    public function findByName($name){
+    return $this->findBy(array('teamA' => $name));
+    } 
 /*
     public function editPost($id, $title, $teaser,$active){
     $this->findBy(array('id' => $id))->update(array("title" => $title, 'teaser' => $teaser, 'active' => $active));
     }
 */
-    public function editPost($id, $title, $teaser, $body, $slug, $active, $edited_at){
+    public function editPost($id, $teamA, $teamALogo, $teamB, $teamBLogo, $edited_at){
     $this->findBy(array('id' => $id))->update(array(
-        'title'  => $title,
-        'teaser' => $teaser,
-        'body'   => $body,
-        'active' => $active,
-        'slug'   => $slug,
+        'teamA'  => $teamA,
+        'teamALogo' => $teamALogo,
+        'teamB'   => $teamB,
+        'teamBLogo' => $teamBLogo,
         'edited_at' => $edited_at));
     }
 
@@ -56,15 +57,14 @@ class PostsManager extends TableManager {
     $this->findBy(array("id" => $id))->update(array("active" => $active));
     }   
     
-    public function addItem($title, $teaser, $body, $active, $slug, $created_at,$img){
-    $this->findAll()->insert(array(
-        'title'     => $title,
-        'teaser'    => $teaser,
-        'body'      => $body,
-        'active'    => $active,
-        'slug'      => $slug,
-        'created_at' => $created_at,
-        'img'       => $img));
+    public function addItem($teamA, $teamALogo, $teamB, $teamBLogo, $created_at){
+      $query = $this->findAll()->insert(array(
+            'teamA'     => $teamA,
+            'teamALogo'     => $teamALogo,
+            'teamB'     => $teamB,            
+            'teamBLogo'     => $teamBLogo,
+            'created_at' => $created_at));
+      return true;
     }
 
     public function removeItem($id){

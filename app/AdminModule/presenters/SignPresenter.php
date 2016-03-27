@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Presenters;
+namespace AdminModule;
 
 use Nette,
     Nette\Forms\Controls,
@@ -72,6 +72,6 @@ class SignPresenter extends BasePresenter
         $this->getUser()->logout();
         $this->flashMessage('Odhlášení bylo úspěšné.', 'success');
         $this->redrawControl('flashMessages');          
-        $this->redirect('Homepage:');
+        $this->redirect(':Front:Homepage:');
     }
 }
