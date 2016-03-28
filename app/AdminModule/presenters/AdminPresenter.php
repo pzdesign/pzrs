@@ -309,11 +309,18 @@ class AdminPresenter extends BasePresenter
 
     public function formCancelled()
     {
-        foreach (Finder::findFiles('*')->in('upload/storage/') as $key => $file) {
-        $this->flashMessage("smazáno $file.", 'danger');   
-        unlink($file);     	
+		$folder = 'upload/posts/storage/';
+
+		if (file_exists($folder)) {
+			foreach (Finder::findFiles('*')->in($folder) as $key => $file) {
+				$this->flashMessage("smazáno $file.", 'danger');   
+				unlink($file);     	
+	
+			}
+			$this->redirect(':Admin:Admin:');					
+		} else {
+			$this->redirect(':Admin:Admin:');
 		}
-        $this->redirect('Admin:default');
     }
 
 
@@ -329,7 +336,7 @@ class AdminPresenter extends BasePresenter
 	if(!$this->isAjax()){
 	    $this->redirect("this");
 	}
-
+    $this->redrawControl('flashMessages'); 	
     $this->redrawControl('postsList'); 	
     }
     
@@ -345,6 +352,8 @@ class AdminPresenter extends BasePresenter
 	if(!$this->isAjax()){
 	    $this->redirect("this");
 	}	
+    $this->redrawControl('flashMessages'); 	
+	
 	$this->redrawControl("postsList");		
     }
 

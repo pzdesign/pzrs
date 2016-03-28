@@ -11,7 +11,7 @@ Nette\Utils\Strings,
 Nette\Utils\Finder;
 
 
-class EnemyPresenter extends BasePresenter
+class MapsPresenter extends BasePresenter
 {
 	private $paginator;
 	private $connection;

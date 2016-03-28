@@ -7,42 +7,27 @@ function closeForm(){
 }
 */
 
-
-
-function moveUploadA(img){
-  $( "#uploadImgNameA" ).val( img );
+function moveUpload(img){
+  $( "#uploadImgName" ).val( img );
 }
-
-function moveUploadB(img){
-  $( "#uploadImgNameB" ).val( img );
-}
-
-
 
 </script>
 {snippet postsList} 
 <!-- Main component for a primary marketing message or call to action -->
 <div class="wrapper-admin">   
-    <h2>Zápasy</h2>
-    <button class="btn btn-success" role="button" data-toggle="modal" data-target="#addPostForm">Přidat</button><br>
+    <h2>Maps</h2>
+    <button class="btn btn-success " role="button" data-toggle="modal" data-target="#addPostForm">Add</button><br>
+
             {if $posts->fetch() == false}
-            <div class="alert-relative alert-danger">Nemám žádné příspěvky</div>
+            <div class="alert-relative alert-danger">Nothing :(</div>
             {else} 
     <table id="postsTable" class="table table-striped"> 
         <thead> 
 
             <tr> 
                 <th>id</th> 
-                <th class="hidden-xs">Played</th> 
-                <th class="hidden-xs">Result</th> 
-                {*<th class="hidden-xs">Autor</th>*}
-                <th>TeamA</th>        
-                <th>Logo</th>   
-                <th>RA</th>      
-                <th>-</th>      
-                <th>RB</th>
-                <th>Logo</th>                         
-                <th>TeamB</th>
+                <th>Name</th>        
+                <th>Img</th>   
                 <th>Edit</th> 
                 <th>Active</th>
                 <th>Del</th> 
@@ -50,43 +35,21 @@ function moveUploadB(img){
         </thead> 
         <tbody> 
             <p id="demo"></p>
+
             {foreach $posts as $key => $post}
             <tr> 
                 <td>{$post->id}</td> 
-
-                <td class="hidden-xs datetime">{$post->created_at|date:'j.n.Y'}<br>{$post->created_at|date:'H:i:s'}</td> 
-                <td class="hidden-xs datetime">{$post->edited_at|date:'j.n.Y'}<br>{$post->edited_at|date:'H:i:s'}</td> 
                 {*<td class="hidden-xs datetime">{$post->autor}</td>*}
-                <td>{$post->teamA}</td>
+                <td>{$post->name}</td>
                 <td> 
-                    {if file_exists($absImagePath. '/' .$posts[$key]->teamALogo) && $posts[$key]->teamALogo != null}
-                    <img src="{$basePath}/{$post->teamALogo}" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/{$post->teamALogo}">'>
+                    {if file_exists($absImagePath. '/' .$posts[$key]->img) && $posts[$key]->img != null}
+                    <img src="{$basePath}/{$post->img}" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/{$post->img}">'>
                     {else}
                     <img src="{$basePath}/img/empty.png" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/img/empty.png">'>
                     {/if}    
-                </td>        
-                <td>{$post->resultA}</td>             
-                <td>
-                    -
-                </td>
-            </td>
-            <td>{$post->resultB}</td> 
-            <th>
-                {if file_exists($absImagePath. '/' .$posts[$key]->teamBLogo) && $posts[$key]->teamBLogo != null}     
-                <img src="{$basePath}/{$post->teamBLogo}" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/{$post->teamBLogo}">'>
-                {else}
-                <img src="{$basePath}/img/empty.png" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/img/empty.png">'>
-                {/if}
-            </td>    
-            <td>{$post->teamB}</td> 
-            {if $post->canBeEdited}     
-            <td><a n:href="Results:editPost $post->id" class="btn btn-primary btn-sm tltp" title="Edit Post"><i class="fa fa-pencil"></i></a></td>        
-            {else}
-            <td></td> 
-            {/if}
+                </td>                      
+            <td><a n:href="Enemy:editPost $post->id" class="btn btn-primary btn-sm tltp" title="Edit Post"><i class="fa fa-pencil"></i></a></td>        
             <td>
-
-
                 {if $post->active == 1}
                 <a n:href="inactive! $post->id" class="btn btn-success btn-sm ajax tltp" title="Hide post">
                     <i class='fa fa-eye'></i>
@@ -96,7 +59,8 @@ function moveUploadB(img){
 
                 <a n:href="active! $post->id" class="btn btn-warning btn-sm  ajax tltp" title="Show post">
                     <i class='fa fa-eye-slash'></i>
-                </a>{/if}</td>
+                </a>{/if}
+            </td>
 
                 <td><a class="btn btn-danger btn-sm tltp" title="Delete post"
                     data-confirm="modal"
@@ -126,10 +90,9 @@ function moveUploadB(img){
                 <li {if $paginator->last}class="disabled"{/if}><a class="ajax {if $paginator->last == false}disabled{/if}" n:href="change! $paginator->getPage()+1">&raquo;</a></li>
             </ul>
         </div>  
- 
+ {/if}
 
     </div>
- {/if}   
 </div>
 {/snippet} 
 
@@ -138,12 +101,47 @@ function moveUploadB(img){
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h2>Add new Result</h2>
+                <h2>Add new Team</h2>
             </div>
        <div class="modal-body">                 
+        <div class="row">             
+            <div class="col-sm-12 logoUploadForm">
+                <div class="col-sm-6 col-sm-offset-3">              
+                    {snippet mapUploadFormSnippet}                
+                        {form mapUploadForm, class => ajax} 
+                            <div class="col-sm-8">                  
+                                <div class="form-group {if $form['img']->error || $imgUploadFormFailed}has-error{else}{/if} ">                      
+                                    {input img, class => "form-control pull-left", placeholder => "Foto: "}
+                                    <span class="text-danger" n:ifcontent>{$form['img']->error|noescape}</span>                        
+                                </div>  
+                                <div class="form-group">                      
+                                </div>                                                  
+                            </div>
+                            <div class="col-sm-4">
+                                {input upload, class => "btn btn-default "}         
+                            </div>         
+                        {/form}    
+                        {if $mapUploadClick }
+                                <script>
+                                    moveUpload({$mapImgName});
+                                </script>
+                            {if $mapUploadDone && $mapImgName} 
 
-            {snippet addNewResultSnippet} 
-            {form addNewResultForm, class => ajax}                
+                                <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$mapImgName}">
+                                <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$mapImgName}   </div>
+                            {else}
+                                <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/img/empty.png">
+                                <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br></div>
+
+                            {/if}
+                        {/if} 
+                    {/snippet}                 
+                </div>
+            </div>
+        </div>
+</div>
+            {snippet addNewMapSnippet} 
+            {form addNewMapForm, class => ajax}                
             <div class="modal-body">
               {*
                 <ul class="alert-relative alert-danger animated flash" n:if="$form->hasErrors()">
@@ -152,20 +150,17 @@ function moveUploadB(img){
                 *}
                 <div class="row">                  
                     <div class="col-sm-12">   
-                        <div class="col-sm-6">                   
-                        <div class="form-group {if $form['teamA']->error}has-error{else}{/if} ">                                                         
-                            {label teamA /}                       
-                            {input teamA, class => "form-control col-lg-6", placeholder => "Team A: ", required, autofocus => true} <br>  
-                            <span class="text-danger" n:ifcontent>{$form['teamA']->error|noescape}</span>
-                        </div>      
+                        <div class="col-sm-6 col-sm-offset-3"> 
+                        <div class="form-group {if $form['mapName']->error}has-error{else}{/if} ">                                                         
+                            {label mapName /}                       
+                            {input mapName, class => "form-control col-lg-6", placeholder => "Map name: ", required, autofocus => true} <br>  
+                            <span class="text-danger" n:ifcontent>{$form['mapName']->error|noescape}</span>
                         </div>
-                        <div class="col-sm-6"> 
-                        <div class="form-group {if $form['teamB']->error}has-error{else}{/if} ">                                                         
-                            {label teamB /}                       
-                            {input teamB, class => "form-control col-lg-6", placeholder => "Team B: ", required, autofocus => true} <br>  
-                            <span class="text-danger" n:ifcontent>{$form['teamB']->error|noescape}</span>
-                        
-                        </div>         
+                        <div class="col-sm-12">
+                            {label mapNameImg /}                       
+                            {input mapNameImg, class => "form-control", required} <br> 
+                        </div>          
+                        </div>    
                     </div>
                 </div>
             </div>                    

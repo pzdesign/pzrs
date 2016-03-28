@@ -49,8 +49,14 @@ class ResultsPresenter extends BasePresenter
 		$allPosts = $this->rm->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
 		$this->template->posts = $allPosts; 
 		//$this->redrawControl('addNewResult');
-
 	}
+
+	public function renderDefault()
+	{      
+		$this->template->paginator = $this->paginator;
+		$allPosts = $this->rm->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
+    	$this->template->posts = $allPosts; 
+	}	
 
 	protected function createComponentAddNewResultForm(){
 
@@ -190,8 +196,10 @@ class ResultsPresenter extends BasePresenter
 	public function actionEditPost($id)
 	{
 		$this->template->absImagePath = $this->context->parameters['wwwDir']; 
-		
 		$post = $this->rm->getById($id)->fetch();
+	    if ($post->canBeEdited == 0) {
+	    	$this->error('Tento příspěvek neleze editovat');	    	
+	   		 }
 		if (!$post) {
 			$this->error('Příspěvek nebyl nalezen');
 		}

@@ -29,6 +29,7 @@ services:
 	rm:	App\Model\ResultsManager
 	tm:	App\Model\TeamsManager
 	em:	App\Model\EnemyManager
+	mm:	App\Model\MapManager
 
 #security:
     #users:

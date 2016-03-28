@@ -1,10 +1,10 @@
 <?php 
 namespace App\Model;
 
-class ResultsManager extends TableManager {
+class MapManager extends TableManager {
 
     private $connection;
-    protected $tableName = 'pzrs_matches';
+    protected $tableName = 'pzrs_maps';
 
     public function getPostsLimited($limit, $offset) {
         return $this->findAll()->limit($limit, $offset);
@@ -14,6 +14,10 @@ class ResultsManager extends TableManager {
     public function getAllPosts() {
         return $this->findAll();
     }   
+
+    public function getByName($name) {
+    return $this->findAll()->fetchPairs($name);
+    }  
 
 
     public function getPostsCount(){
@@ -30,43 +34,36 @@ class ResultsManager extends TableManager {
 
     public function findByName($name){
     return $this->findBy(array('teamA' => $name));
-    } 
+    }
+
 /*
     public function editPost($id, $title, $teaser,$active){
     $this->findBy(array('id' => $id))->update(array("title" => $title, 'teaser' => $teaser, 'active' => $active));
     }
 */
-    public function editPost($id, $teamA, $teamALogo, $teamB, $teamBLogo, $edited_at){
+    public function editPost($id, $teamA, $teamALogo, $created_at){
     $this->findBy(array('id' => $id))->update(array(
-        'teamA'  => $teamA,
-        'teamALogo' => $teamALogo,
-        'teamB'   => $teamB,
-        'teamBLogo' => $teamBLogo,
-        'edited_at' => $edited_at));
+            'teamA'     => $teamA,
+            'teamALogo'     => $teamALogo,
+            'created_at' => $created_at));
     }
 
     public function delImg($id, $img){
-    $this->findBy(array('id' => $id))->update(array('img' => null));
+    $this->findBy(array('id' => $id))->update(array('teamALogo' => null));
     }
 
     public function updateImg($id, $old, $new){
-    $this->findBy(array('id' => $id))->update(array('img' => $new));
+    $this->findBy(array('id' => $id))->update(array('teamALogo' => $new));
     }
 
     public function setActive($id, $active){
     $this->findBy(array("id" => $id))->update(array("active" => $active));
     }   
- 
-    public function setCanBeEdited($id){
-    $this->findBy(array("id" => $id))->update(array("canbeedited" => '0'));
-    }  
-
-    public function addItem($teamA, $teamALogo, $teamB, $teamBLogo, $created_at){
+    
+    public function addItem($teamA, $teamALogo, $created_at){
       $query = $this->findAll()->insert(array(
             'teamA'     => $teamA,
             'teamALogo'     => $teamALogo,
-            'teamB'     => $teamB,            
-            'teamBLogo'     => $teamBLogo,
             'created_at' => $created_at));
       return true;
     }

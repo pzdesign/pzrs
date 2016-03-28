@@ -42,12 +42,8 @@ class TeamsPresenter extends BasePresenter
 		$this->template->paginator = $this->paginator;		
 		$this->template->absImagePath = $this->context->parameters['wwwDir'];  
 
-
-
-
 		$allPosts = $this->tm->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
 		$this->template->posts = $allPosts; 
-
 
 		$this->template->teamATitleCheck = false;
 		$this->template->teamALogoUploadClick = false;
@@ -55,10 +51,14 @@ class TeamsPresenter extends BasePresenter
 		$this->template->teamALogoUploadDone = false;	
 		$this->template->teamALogoFormFail = false;	
 		//$this->redrawControl('addNewResult');
-
-
-
 	}
+
+	public function renderDefault()
+	{      
+		$this->template->paginator = $this->paginator;
+		$allPosts = $this->tm->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
+    	$this->template->posts = $allPosts; 
+	}	
 
 	protected function createComponentAddNewResultForm(){
 		$form = new Form;
@@ -215,8 +215,8 @@ class TeamsPresenter extends BasePresenter
 
 		$form->addText("logoTeamA", 'Logo A:')->setAttribute('id', 'uploadImgNameA')->setAttribute('readonly')->setDefaultValue(null);
 
-		$form->addSubmit("submit", "Uložit změny");
-				//->onClick[] = $this->handleSaveTeamLogoInEditMode;
+		$form->addSubmit("submit", "Uložit změny")
+				->onClick[] = $this->handleSaveTeamLogoInEditMode;
 
 		$form->addSubmit('cancel', 'Zavřít')
 				->setValidationScope([])
@@ -263,8 +263,8 @@ class TeamsPresenter extends BasePresenter
 			$this->redirect(':Admin:Teams:');
 		}
 
-		$this->handleSaveTeamLogoInEditMode();
-		
+		//$this->handleSaveTeamLogoInEditMode();	
+		//	
 		$this->redrawControl('teamALogoForm');	
 		$this->redrawControl('flashMessages');
 
@@ -328,10 +328,19 @@ class TeamsPresenter extends BasePresenter
 		if(!$this->isAjax()){
 			$this->redirect("this");
 		}
+
 		$post = $this->tm->getById($postId)->fetch();
+		//$this->flashMessage("removed. $post->teamA", "danger");	
+		$matches = $this->rm->findBy(array('teamA' => $post->teamA));
+		foreach ($matches as $key => $match) {
+			$this->flashMessage("disabled match. $match->id", "info");	
+			$this->rm->setCanBeEdited($match->id);	
+		}
+
 		$this->tm->removeItem($postId);	
 		$this->payload->deleteItem = true; 
-		$this->flashMessage("Success.", "success");
+		$this->flashMessage("removed. $postId", "success");	
+
 		$this->redrawControl('flashMessages'); 			
 		$this->redrawControl('postsList');		
 	}
@@ -349,11 +358,17 @@ class TeamsPresenter extends BasePresenter
 
 	public function formCancelled()
 	{
-		foreach (Finder::findFiles('*')->in('upload/myTeams/storage/') as $key => $file) {
-			$this->flashMessage("smazáno $file.", 'danger');   
-			unlink($file);     	
+		$folder = 'upload/myTeams/storage/';
+		if (file_exists($folder)) {
+			foreach (Finder::findFiles('*')->in($folder) as $key => $file) {
+				$this->flashMessage("smazáno $file.", 'danger');   
+				unlink($file);
+
+			}
+		$this->redirect(':Admin:Teams:');	
+		} else {
+			$this->redirect(':Admin:Teams:');		
 		}
-		$this->redirect(':Admin:Teams:');
 	}
 
 	public function removeLogosFromStorage()
@@ -476,8 +491,4 @@ class TeamsPresenter extends BasePresenter
 
  		}   		  	
     }
-
-
-
-
 }
