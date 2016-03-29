@@ -29,7 +29,7 @@ class MapsPresenter extends BasePresenter
 	public function actionDefault($page = 1) {
 
 		$paginator = new Nette\Utils\Paginator;
-		$paginator->setItemCount($this->em->getPostsCount($this->getView()));
+		$paginator->setItemCount($this->mm->getPostsCount($this->getView()));
 		$paginator->setItemsPerPage(10);
 		$paginator->setPage($page);
 		$length = $paginator->getLength();
@@ -42,42 +42,40 @@ class MapsPresenter extends BasePresenter
 		$this->template->paginator = $this->paginator;		
 		$this->template->absImagePath = $this->context->parameters['wwwDir'];  
 
-		$allPosts = $this->em->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
+		$allPosts = $this->mm->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
 		$this->template->posts = $allPosts; 
 
-		$this->template->teamATitleCheck = false;
-		$this->template->teamALogoUploadClick = false;
-		$this->template->teamALogoName = 'empty';		
-		$this->template->teamALogoUploadDone = false;	
-		$this->template->teamALogoFormFail = false;	
-		//$this->redrawControl('addNewResult');
+		$this->template->mapTitleCheck = false;
+		$this->template->mapImgUploadClick = false;
+		$this->template->mapImgName = 'empty';		
+		$this->template->mapImgUploadDone = false;	
+		$this->template->mapImgFormFail = false;	
+		//$this->redrawControl('addNewMap');
 	}
 
 	public function renderDefault()
 	{      
 		$this->template->paginator = $this->paginator;
-		$allPosts = $this->em->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
+		$allPosts = $this->mm->getPostsLimited($this->paginator->getLength(), $this->paginator->getOffset())->order('id DESC');
     	$this->template->posts = $allPosts; 
 	}	
 
-	protected function createComponentAddNewResultForm(){
+	protected function createComponentAddNewMapForm(){
 		$form = new Form;
-		$form->addText("teamA");
+		$form->addText("mapName");
 
-		$form->addText("logoTeamA")->setAttribute('id', 'uploadImgNameA')->setAttribute('readonly')->setDefaultValue(null);
-		$form->addHidden('slug');
-		$form->addHidden('edited_at');
+		$form->addText("mapImgHidden")->setAttribute('id', 'uploadImg')->setAttribute('readonly')->setDefaultValue(null);
 		$form->addSubmit('submit', 'SAVE');
 
 		$form->addSubmit('cancel', 'CLOSE')
 			->onClick[] = [$this, 'formCancelled'];
 
-		$form->onValidate[] = $this->addNewResultFormCheck;
-		$form->onSuccess[] = $this->addNewResultFormSubmit;
+		$form->onValidate[] = $this->addNewMapFormCheck;
+		$form->onSuccess[] = $this->addNewMapFormSubmit;
 		return $form;
 	}
 
-	public function addNewResultFormCheck($form)
+	public function addNewMapFormCheck($form)
 	{
 		if(!$this->isAjax()){
 			$this->redirect('Admin:default');
@@ -85,74 +83,72 @@ class MapsPresenter extends BasePresenter
 
 		$values = $form->getValues();
 
-	    if (strlen($values->teamA) < 3) { // validační podmínka    	
-	    	$form['teamA']->addError('Title must have atleast 3 char.');
+	    if (strlen($values->mapName) < 3) { // validační podmínka    	
+	    	$form['mapName']->addError('Title must have atleast 3 char.');
 	    }
 
-	    if (!$values->logoTeamA) { // validační podmínka    	
-	    	$this['teamALogoUpload']['teamALogo']->addError('Logo must be uploaded');
-	    	$this->redrawControl('teamALogoForm');	       	      
+	    if (!$values->mapImgHidden) { // validační podmínka    	
+	    	$this['mapImgUpload']['mapImg']->addError('Img must be uploaded');
+	    	$this->redrawControl('mapImgUploadSnippet');	       	      
 	    }
-	    $this->redrawControl('addNewResultSnippet');
+	    $this->redrawControl('addNewMapSnippet');
 	    $this->redrawControl('flashMessages');
 
 
 	}
 
-	public function addNewResultFormSubmit($form){
+	public function addNewMapFormSubmit($form){
 		if(!$this->isAjax()){
 			$this->redirect('Admin:default');
 		}	
 			$values = $form->getValues();		
-			if($values->logoTeamA)
+			if($values->mapImgHidden)
 			{	
 
-		$created_at = date("Y-m-d H:i:s");	
-		$values->logoTeamA = str_replace('storage/','',$values->logoTeamA);
-		$query = $this->em->addItem($values->teamA, $values->logoTeamA, $created_at);				
-		if($query) {
-			$this->payload->resetForm = true; 
-			$form->setValues(array(), TRUE); 
-			$this->redrawControl('teamALogoForm');			  				  		
-			$this->redrawControl('addNewTeamSnippet');			  		
-			$this->redrawControl('postsList');	
-		
-	   		$this->paginator->setItemCount($this->em->getPostsCount());
-	   		$this->handleTeamsLogosSave();
-		} else {
-			$this->flashMessage("ERROR", "danger");
-		}
-
-
+			$active = 0;	
+			$values->mapImgHidden = str_replace('storage/','',$values->mapImgHidden);
+			$query = $this->mm->addItem($values->mapName, $values->mapImgHidden, $active);				
+				if($query) {
+					$this->payload->resetForm = true; 
+					$form->setValues(array(), TRUE); 
+					$this->redrawControl('mapImgUploadSnippet');			  				  		
+					$this->redrawControl('addNewImgSnippet');			  		
+					$this->redrawControl('postsList');	
+				
+			   		$this->paginator->setItemCount($this->mm->getPostsCount());
+			   		$this->handleMapsImgsSave();
+				} else {
+					$this->flashMessage("ERROR", "danger");
+				}
 			}
 	}
 
-	protected function createComponentTeamALogoUpload(){
+	protected function createComponentMapImgUpload(){
 		$form = new Form;
-		$form->addUpload("teamALogo", "Logo A:")
+		$form->addUpload("mapImg", "Img :")
 				->addRule(Form::IMAGE, "Lze vložit pouze obrázky")
 				->setAttribute('placeholder', 'napište email');
 
-		$form->addSubmit("uploadA", "Upload");
-		$form->onValidate[] = $this->TeamALogoUploadCheck;
-		$form->onSuccess[] = $this->TeamALogoUploadSubmit;
+		$form->addSubmit("upload", "Upload");
+		$form->onValidate[] = $this->MapImgUploadCheck;
+		$form->onSuccess[] = $this->MapImgUploadSubmit;
 		return $form;
 	}   
 
-	public function TeamALogoUploadSubmit(UI\Form $form, $values){
+	public function MapImgUploadSubmit(UI\Form $form, $values){
 		$values = $form->getValues();
 
 		if(!$this->isAjax()){
 			$this->redirect('this');
 		}	    
     	//$form->setValues(array(), TRUE);	
-		//$this->redrawControl('teamALogoForm');
+		//$this->redrawControl('mapImgUploadSnippet');
 		
 
-		$dir = 'upload/enemy/storage/';
-		$uploadDir = 'upload/enemy/';
+		$dir = 'upload/maps/storage/';
+		$uploadDir = 'upload/maps/';
 
-		$name = $values->teamALogo->getName();
+		$name = $values->mapImg->getName();
 		$path = $dir.$name;
 		$ext = '.jpg';
 
@@ -179,12 +175,12 @@ class MapsPresenter extends BasePresenter
 
 		if(file_exists($path) || file_exists($uploadDir)){
 
-			$form['teamALogo']->addError("Foto již existuje!");
+			$form['mapImg']->addError("Foto již existuje!");
 			$this->redrawControl('flashMessages');
-			$this->redrawControl('teamALogoForm');
+			$this->redrawControl('mapImgUploadSnippet');
 
 		} else {
-			$values->teamALogo->move($path);
+			$values->mapImg->move($path);
 
 			$image = Image::fromFile($path);
 			$image->resize(320, 180);
@@ -193,32 +189,33 @@ class MapsPresenter extends BasePresenter
 			$image->save($path,80, Image::JPEG);
 			$this->flashMessage("Foto bylo nahráno", "success");
 			$this->redrawControl('flashMessages');
-			$this->template->teamALogoUploadClick = true;			
-			$this->template->teamALogoUploadDone = true;
+			$this->template->mapImgUploadClick = true;			
+			$this->template->mapImgUploadDone = true;
 			$this->template->uploadDone = true;
 			
 			$this->template->imgName = $path;
 			$this->template->uploadDone = true;	
-   			$this->redrawControl('uploadForm');
+   			$this->redrawControl('mapImgUpload');
 			
-			$this->template->teamALogoName =  $path;		
-			$this->redrawControl('teamALogoForm');
-			//$this->redrawControl('addNewResultSnippet');	
+			$this->template->mapImgName =  $path;		
+			$this->redrawControl('mapImgUploadSnippet');
+			//$this->redrawControl('addNewMapSnippet');	
 		}	
 	}
 
-	public function TeamALogoUploadCheck(UI\Form $form, $values){
+	public function MapImgUploadCheck(UI\Form $form, $values){
 	}
 
 	protected function createComponentEditPostForm(){
 		$form = new Form;
 
-		$form->addText("teamA", 'Team name:');
+		$form->addText("mapName", 'Team name:');
 
-		$form->addText("logoTeamA", 'Logo A:')->setAttribute('id', 'uploadImgNameA')->setAttribute('readonly')->setDefaultValue(null);
+		$form->addText("mapImgHidden", 'Img A:')->setAttribute('id', 'uploadImgName')
+		->setAttribute('readonly')->setDefaultValue(null);
 
 		$form->addSubmit("submit", "Uložit změny");
-				//->onClick[] = $this->handleSaveTeamLogoInEditMode;
+				//->onClick[] = $this->handleSaveTeamImgInEditMode;
 
 		$form->addSubmit('cancel', 'Zavřít')
 				->setValidationScope([])
@@ -232,17 +229,17 @@ class MapsPresenter extends BasePresenter
 
 	public function editPostFormCheck(UI\Form $form, $values){
 		if(!$this->isAjax()){
-			$this->redirect(':Admin:Results:');
+			$this->redirect(':Admin:Maps:');
 		}
 
 		$values = $form->getValues();
-	    if (strlen($values->teamA) < 3) { // validační podmínka    	
-	    	$form['teamA']->addError('Title must have atleast 3 char.');
+	    if (strlen($values->mapName) < 3) { // validační podmínka    	
+	    	$form['mapName']->addError('Title must have atleast 3 char.');
 	    }
 
-	    if (!$values->logoTeamA) { // validační podmínka    	
-	    	$this['teamALogoUpload']['teamALogo']->addError('Logo must be uploaded');
-	    	$this->redrawControl('teamALogoForm');	       	      
+	    if (!$values->mapImgHidden) { // validační podmínka    	
+	    	$this['mapImgUpload']['mapImg']->addError('Img must be uploaded');
+	    	$this->redrawControl('mapImgUploadSnippet');	       	      
 	    }
 
 	    $this->redrawControl('editPostForm');
@@ -257,17 +254,17 @@ class MapsPresenter extends BasePresenter
 
 		$values->active = 0;
 
-		$this->em->editPost($id,$values->teamA,$values->logoTeamA, $values->active);
+		$this->mm->editPost($id,$values->mapName,$values->mapImgHidden, $values->active);
 
-		$this->flashMessage("Team $values->teamA byl upraven", "success");
+		$this->flashMessage("Team $values->mapName byl upraven", "success");
 
 		if(!$this->isAjax()){
-			$this->redirect(':Admin:Enemy:');
+			$this->redirect(':Admin:Maps:');
 		}
-		$this->handleSaveTeamLogoInEditMode();
-		$this->redrawControl('teamALogoForm');	
+		$this->handleSaveMapImgInEditMode();
+		$this->redrawControl('mapImgUploadSnippet');	
 		$this->redrawControl('flashMessages');
-		$this->redirect(':Admin:Enemy:');	
+		$this->redirect(':Admin:Maps:');	
 
 	}
 
@@ -283,7 +280,7 @@ class MapsPresenter extends BasePresenter
 		$this->template->imgRemoved = false;        
 		$this->template->uploadDone = false;
 		$this->template->editDone = false;			
-		$post = $this->em->getById($id)->fetch();
+		$post = $this->mm->getById($id)->fetch();
 		if (!$post) {
 			$this->error('Příspěvek nebyl nalezen');
 		}
@@ -299,7 +296,7 @@ class MapsPresenter extends BasePresenter
 			return;
 		}
 
-		$this->em->setActive($postId, 1);
+		$this->mm->setActive($postId, 1);
 
 		$this->flashMessage("Item s ID $postId byl zviditelněn.", "success");	
 		if(!$this->isAjax()) {
@@ -315,7 +312,7 @@ class MapsPresenter extends BasePresenter
 			return;
 		}
 
-		$this->em->setActive($postId, 0);
+		$this->mm->setActive($postId, 0);
 
 		$this->flashMessage("Item s ID $postId byl zneviditelněn.", "warning");
 		if(!$this->isAjax()){
@@ -329,16 +326,16 @@ class MapsPresenter extends BasePresenter
 		if(!$this->isAjax()){
 			$this->redirect("this");
 		}
-		$post = $this->em->getById($postId)->fetch();
-		$this->removeImg($postId);	
+		$post = $this->mm->getById($postId)->fetch();
+		$this->handleRemoveImg($postId);	
 
-		$matches = $this->rm->findBy(array('teamB' => $post->teamA));
+		$matches = $this->rm->findBy(array('map1' => $post->mapName));
 		foreach ($matches as $key => $match) {
 			$this->flashMessage("disabled match. $match->id", "info");	
 			$this->rm->setCanBeEdited($match->id);	
 		}
 
-		$this->em->removeItem($postId);	
+		$this->mm->removeItem($postId);	
 	
 		$this->payload->deleteItem = true; 
 
@@ -360,23 +357,23 @@ class MapsPresenter extends BasePresenter
 
 	public function formCancelled()
 	{	
-		$folder = 'upload/enemy/storage/';
+		$folder = 'upload/maps/storage/';
 
 		if (file_exists($folder)) {
 			foreach (Finder::findFiles('*')->in($folder) as $key => $file) {
 				$this->flashMessage("smazáno $file.", 'danger');   
 				unlink($file);  
-				$this->redirect(':Admin:Enemy:');					   	
+				$this->redirect(':Admin:Maps:');					   	
 			}
 		} else {
-			$this->redirect(':Admin:Enemy:');
+			$this->redirect(':Admin:Maps:');
 		}
 	}
 
-	public function removeLogosFromStorage()
+	public function removeImgsFromStorage()
 	{
-		$dir = 'upload/enemy/storage';
-		$dirNew = 'upload/enemy/';
+		$dir = 'upload/maps/storage';
+		$dirNew = 'upload/maps/';
 
 		foreach (Finder::findFiles('*.jpg','*.png','*.JPG','*.PNG')->in($dir) as $key => $file) {
 			$nfile = str_replace('/storage','',$file);
@@ -392,10 +389,10 @@ class MapsPresenter extends BasePresenter
 		$this->redrawControl('flashMessages');
 	}
 
-	public function handleTeamsLogosSave()
+	public function handleMapsImgsSave()
 	{
-		$dir = 'upload/enemy/storage/';
-		$dirNew = 'upload/enemy/';
+		$dir = 'upload/maps/storage/';
+		$dirNew = 'upload/maps/';
 
 		if(!$this->isAjax()){
 			$this->redirect("this");
@@ -429,47 +426,47 @@ class MapsPresenter extends BasePresenter
 		
     	//$this->template->post = $post;
 		$this->template->removeDone = true;
-    	$this->redrawControl("teamALogoForm");     	 
+    	$this->redrawControl("mapImgUploadSnippet");     	 
     	$this->redrawControl("editPostForm");     	 
     	//return;
     }
-
+/*
    public function removeImg($postId){
 
-    	$post = $this->em->getById($postId)->fetch();
-     	$this->em->delImg($postId,$post->teamALogo);     	    
-    	unlink($post->teamALogo);     	
+    	$post = $this->mm->getById($postId)->fetch();
+     	$this->mm->delImg($postId,$post->mapImg);     	    
+    	unlink($post->mapImg);     	
    }
-
+*/
     public function handleRemoveImg($postId){
 
    		if(!$this->isAjax()){
 	   	$this->redirect("this");
 		} 
-    	$post = $this->em->getById($postId)->fetch();
+    	$post = $this->mm->getById($postId)->fetch();
 
-    	if(file_exists($post->teamALogo)){
+    	if(file_exists($post->mapImg)){
     	    $this->flashMessage("Obrazek byl odstranen.", "success"); 
-    		$this->em->delImg($postId,$post->teamALogo);     	    
-    		unlink($post->teamALogo);    	    
+    		$this->mm->delImg($postId,$post->mapImg);     	    
+    		unlink($post->mapImg);    	    
     	}else {
     		$this->flashMessage("CHYBA.", "danger"); 		
     	}    
     	//unlink($post->img); 		 
 		$this->template->removeDone = true;
-		$this->redrawControl("teamALogoForm"); 
+		$this->redrawControl("mapImgUploadSnippet"); 
     	$this->redrawControl("flashMessages"); 
  	    return;  		
     }
 
 
-  public function handleSaveTeamLogoInEditMode()
+  public function handleSaveMapImgInEditMode()
     {
     	$postId = $this->getParameter("id");
-    	$dir = 'upload/enemy/storage';
-    	$dirNew = 'upload/enemy/';
+    	$dir = 'upload/maps/storage';
+    	$dirNew = 'upload/maps/';
     	if($postId) {
-    		$post = $this->em->getById($postId)->fetch();    		
+    		$post = $this->mm->getById($postId)->fetch();    		
     	}
 
 		if(!$this->isAjax()){
@@ -481,14 +478,14 @@ class MapsPresenter extends BasePresenter
    			if(!file_exists($nfile)){
     			if($postId){  
 
-    				$this->em->updateImg($postId, $file, $nfile);   				
+    				$this->mm->updateImg($postId, $file, $nfile);   				
         			copy($file, $nfile);
    					unlink($file);  
 					$this->template->editDone = true;  	
 					$this->template->postAdded = true; 
         			$this->flashMessage("přesunuto $dir -> $dirNew -> $nfile", "info"); 					  					       			
-        			$this->redirect(':Admin:Enemy:');
- 					$this->redrawControl('teamALogoForm');	
+        			$this->redirect(':Admin:Maps:');
+ 					$this->redrawControl('mapImgUploadSnippet');	
     				$this->redrawControl('flashMessages');
     				
         		}

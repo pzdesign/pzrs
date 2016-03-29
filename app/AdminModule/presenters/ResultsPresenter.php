@@ -18,12 +18,41 @@ class ResultsPresenter extends BasePresenter
 	private $posts = array();
 	private $cleanCache;
 	private $teams = array();
+	private $teamsAArray = array();
+	private $teamsBArray = array();
+	private $mapsArray = array();
+
 	public function startup() {
 		parent::startup();
 		if (!$this->getUser()->isLoggedIn()) {
 			$this->redirect('Sign:in');
 		}
+
+
+		$teamsA = $this->tm->findAll();
+		foreach($teamsA as $key => $teamA) {
+		$teamsAArray[] = $teamA->teamA;
+		}
+
+		$teamsB = $this->em->findAll();
+		foreach($teamsB as $key => $teamB) {
+		$teamsBArray[] = $teamB->teamA;
+		}
+
+
+		$mapsFromManager = $this->mm->findAll();
+		foreach($mapsFromManager as $key => $map) {
+		$mapsArray[] = $map->mapName;
+		}
+
+		$this->teamsAArray = $teamsAArray;		
+		$this->teamsBArray = $teamsBArray;
+		array_unshift($mapsArray, 'None');		
+		$this->mapsArray = $mapsArray;
+
+
 	}
+
 
 
 	public function actionDefault($page = 1) {
@@ -60,21 +89,32 @@ class ResultsPresenter extends BasePresenter
 
 	protected function createComponentAddNewResultForm(){
 
-		$teamsA = $this->tm->findAll();
-		foreach($teamsA as $key => $teamA) {
-		$teamsAArray[] = $teamA->teamA;
-		}
-
-		$teamsB = $this->em->findAll();
-		foreach($teamsB as $key => $teamB) {
-		$teamsBArray[] = $teamB->teamA;
-		}
-
 
 		$form = new Form;
 
-		$form->addSelect('teamA', 'Team:')->setItems($teamsAArray, FALSE);
-		$form->addSelect('teamB', 'Enemy:')->setItems($teamsBArray, FALSE);
+		$form->addSelect('teamA', 'Home:')->setItems($this->teamsAArray, FALSE);
+		$form->addSelect('teamB', 'Enemy:')->setItems($this->teamsBArray, FALSE);
+
+		$form->addSelect('map1', 'Map1:')->setItems($this->mapsArray, FALSE)
+				->setAttribute('id', 'map1select');	
+
+		$form->addSelect('map2', 'Map2:')->setItems($this->mapsArray, FALSE)
+				->setAttribute('id', 'map2select');	
+
+		$form->addSelect('map3', 'Map3:')->setItems($this->mapsArray, FALSE)
+				->setAttribute('id', 'map3select');	
+
+	 	/*
+		$form->addSelect('map4', 'Map4:')->setItems($mapsArray, FALSE);
+		$form->addSelect('map5', 'Map5:')->setItems($mapsArray, FALSE);
+		*/
+		$form->addText('resultAMap1', 'HM 1:');
+		$form->addText('resultAMap2', 'HM 2:');
+		$form->addText('resultAMap3', 'HM 3:');
+		$form->addText('resultBMap1', 'EM 1:');
+		$form->addText('resultBMap2', 'EM 2:');
+		$form->addText('resultBMap3', 'EM 3:');
+
 
 		$form->addSubmit('submit', 'SAVE');
 
@@ -102,6 +142,46 @@ class ResultsPresenter extends BasePresenter
 	        $form['teamB']->addError('Title must have atleast 3 char. ');	      
 	    }
 
+	    if ($values->map1 == 'None') { // validační podmínka    	
+	        $form['map1']->addError('First map must be choosen. ');	      
+	    }
+
+	    if ($values->map1 != 'None' && $values->map2 != 'None' && $values->map3 != 'None') { // validační podmínka 
+	        return true;	             	 
+	          
+	    } elseif ($values->map1 != 'None' && $values->map2 != 'None' && $values->map3 == 'None') {
+	    	$form['map3']->addError('Why Iam empty?. ');
+	    }
+
+
+	    if ($values->map1 == 'None' && $values->map2 != 'None' && $values->map3 == 'None') { // validační podmínka    	
+	        //$form['map2']->addError('If u choose 2nd map u have to choose 1st and 3rd too!. ');	      
+	        $form['map3']->addError('Why Iam empty?. ');	      
+	    } 
+
+
+	    if ($values->map1 != 'None' && $values->map2 == 'None' && $values->map3 != 'None') { // validační podmínka    	
+	        $form['map2']->addError('Why Iam empty?. ');	      
+	        $form['map3']->addError('If u choose 3rd map u have to choose 2nd too!. ');	      
+	    } 
+
+
+	    if ($values->map1 == 'None' && $values->map2 != 'None' && $values->map3 != 'None') { // validační podmínka    	
+	        $form['map1']->addError('If u choose 2nd and 3rd map u have to choose 1st too!. ');	      
+      
+	    } 
+
+	    if ($values->map1 != 'None') { // validační podmínka   
+	     	if ($values->resultAMap1 == null) {
+	        	$form['resultAMap1']->addError(' ');	      
+	    	}
+	     	if ($values->resultBMap1 == null) {
+	        	$form['resultBMap1']->addError(' ');	      
+	    	}
+
+
+	    }	    
+
 		$this->redrawControl('addNewResultSnippet');
 		$this->redrawControl('flashMessages');
 
@@ -118,8 +198,62 @@ class ResultsPresenter extends BasePresenter
 
 		$teamALogo = $this->tm->findByName($values->teamA)->fetch();
 		$teamBLogo = $this->em->findByName($values->teamB)->fetch();
+		$canBeEdited = 1;
 
-		$query = $this->rm->addItem($values->teamA, $teamALogo->teamALogo, $values->teamB, $teamBLogo->teamALogo, $created_at);
+		$resultA = 0;
+		$resultB = 0;
+		$win = 'L';
+			
+
+		if($values->resultAMap1 > $values->resultBMap1) {
+			$resultA++;
+		} elseif($values->resultAMap1 < $values->resultBMap1) {
+			$resultB++;
+			}
+		
+
+		if($values->resultAMap2 > $values->resultBMap2) {
+			$resultA++;
+		} elseif($values->resultAMap2 < $values->resultBMap2) {
+			$resultB++;
+			}
+	
+
+		if($values->resultAMap3 > $values->resultBMap3) {
+			$resultA++;
+		} elseif($values->resultAMap3 < $values->resultBMap3) {
+			$resultB++;
+			}
+	
+
+		if($resultA > $resultB) {
+			$win = 'W';
+		} elseif ( $resultA == $resultB ) {
+			$win = 'D';
+			$resultA = 1;
+			$resultB = 1;						
+		}
+			
+
+		$query = $this->rm->addItem(
+			$values->teamA, 
+			$teamALogo->teamALogo, 
+			$values->teamB, 
+			$teamBLogo->teamALogo, 
+			$values->map1, 
+			$values->map2, 
+			$values->map3, 
+			$values->resultAMap1,			 
+			$values->resultAMap2,			 
+			$values->resultAMap3,			 
+			$values->resultBMap1,			 
+			$values->resultBMap2,			 
+			$values->resultBMap3,			
+			$resultA,			
+			$resultB,			
+			$win,			
+			$created_at,
+			$canBeEdited);
 		if($query) {
     	$form->setValues(array(), TRUE); 
 	
@@ -137,20 +271,15 @@ class ResultsPresenter extends BasePresenter
 	}
 
 	protected function createComponentEditPostForm(){
-		$teamsA = $this->tm->findAll();
-		foreach($teamsA as $key => $teamA) {
-		$teamsAArray[] = $teamA->teamA;
-		}
-
-		$teamsB = $this->em->findAll();
-		foreach($teamsB as $key => $teamB) {
-		$teamsBArray[] = $teamB->teamA;
-		}
 
 		$form = new Form;
 
-		$form->addSelect('teamA', 'Team:')->setItems($teamsAArray, FALSE);
-		$form->addSelect('teamB', 'Enemy:')->setItems($teamsBArray, FALSE);
+		$form->addSelect('teamA', 'Team:')->setItems($this->teamsAArray, FALSE);
+		$form->addSelect('teamB', 'Enemy:')->setItems($this->teamsBArray, FALSE);
+		
+		$form->addSelect('map1', 'Map1:')->setItems($this->mapsArray, FALSE);	
+		$form->addSelect('map2', 'Map2:')->setItems($this->mapsArray, FALSE);
+		$form->addSelect('map3', 'Map3:')->setItems($this->mapsArray, FALSE);
 
 		$form->addHidden('edited_at');
 
@@ -179,7 +308,21 @@ class ResultsPresenter extends BasePresenter
 		$teamBLogo = $this->em->findByName($values->teamB)->fetch();
 
 
-		$this->rm->editPost($id,$values->teamA, $teamALogo->teamALogo, $values->teamB, $teamBLogo->teamALogo, $values->edited_at);
+		$this->rm->editPost($id,
+			$values->teamA, 
+			$teamALogo->teamALogo, 
+			$values->teamB, 
+			$teamBLogo->teamALogo,
+			$values->map1, 
+			$values->map2, 
+			$values->map3,			 
+			$values->resultAMap1,			 
+			$values->resultAMap2,			 
+			$values->resultAMap3,			 
+			$values->resultBMap1,			 
+			$values->resultBMap2,			 
+			$values->resultBMap3,			 
+			$values->edited_at);
 
 		$this->flashMessage("Match byl upraven", "success");
 

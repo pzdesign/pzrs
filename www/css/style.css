@@ -1001,3 +1001,61 @@ color: #FFF;
 .logoUploadForm {
   margin-top:20px;
 }
+
+
+.map {
+  padding: 20px;
+  background-color: #CFD8DC;
+  border-radius: 8px;  
+  margin-bottom:20px;
+}
+
+
+td.win {
+  color: #3fb618;
+  font-weight:400;
+}
+
+td.draw  {
+  color: #FFA200;
+  font-weight:400;  
+}
+
+td.lose  {
+  color: #FF0039;
+  font-weight:400;  
+}
+
+.table-striped>tbody>tr.win {
+  border-left: 10px solid #3fb618;    
+}
+
+.table-striped>tbody>tr.draw{
+    border-left: 10px solid #FFA200;
+}
+
+.table-striped>tbody>tr.lose{
+    border-left: 10px solid #FF0039;
+}
+
+
+.Dust2 {
+  background-image: url('../upload/maps/dust2.jpg');
+  background-size:cover;
+}
+
+
+
+#map1 .form-control {
+    background-color: rgba(255,255,255,.75);
+
+}
+#map2 .form-control {
+    background-color: rgba(255,255,255,.75);
+
+}
+#map3 .form-control {
+    background-color: rgba(255,255,255,.75);
+
+}
+

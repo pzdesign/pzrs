@@ -36,13 +36,34 @@ class ResultsManager extends TableManager {
     $this->findBy(array('id' => $id))->update(array("title" => $title, 'teaser' => $teaser, 'active' => $active));
     }
 */
-    public function editPost($id, $teamA, $teamALogo, $teamB, $teamBLogo, $edited_at){
-    $this->findBy(array('id' => $id))->update(array(
+    public function editPost($id, 
+        $teamA, $teamALogo, 
+        $teamB,$teamBLogo,
+        $map1, $map2, $map3,  
+        $resultAMap1, $resultAMap2, $resultAMap3, 
+        $resultBMap1, $resultBMap2, $resultBMap3, 
+        $resultA, $resultB, 
+        $edited_at)
+    {
+
+        $this->findBy(array('id' => $id))->update(array(
         'teamA'  => $teamA,
         'teamALogo' => $teamALogo,
         'teamB'   => $teamB,
         'teamBLogo' => $teamBLogo,
+        'map1'     => $map1,
+        'map2'     => $map2,        
+        'map3'     => $map3,        
+        'resultAMap1'     => $resultAMap1,        
+        'resultAMap2'     => $resultAMap2,        
+        'resultAMap3'     => $resultAMap3,        
+        'resultBMap1'     => $resultBMap1,        
+        'resultBMap2'     => $resultBMap2,        
+        'resultBMap3'     => $resultBMap3,        
+        'resultA'     => $resultA,        
+        'resultB'     => $resultB,        
         'edited_at' => $edited_at));
+
     }
 
     public function delImg($id, $img){
@@ -61,13 +82,34 @@ class ResultsManager extends TableManager {
     $this->findBy(array("id" => $id))->update(array("canbeedited" => '0'));
     }  
 
-    public function addItem($teamA, $teamALogo, $teamB, $teamBLogo, $created_at){
-      $query = $this->findAll()->insert(array(
+    public function addItem(
+        $teamA, $teamALogo, 
+        $teamB, $teamBLogo, 
+        $map1, $map2, $map3,  
+        $resultAMap1, $resultAMap2, $resultAMap3, 
+        $resultBMap1, $resultBMap2, $resultBMap3,  
+        $resultA, $resultB, $win, 
+        $created_at, $canBeEdited)
+    {
+            $query = $this->findAll()->insert(array(
             'teamA'     => $teamA,
             'teamALogo'     => $teamALogo,
             'teamB'     => $teamB,            
             'teamBLogo'     => $teamBLogo,
-            'created_at' => $created_at));
+            'map1'     => $map1,
+            'map2'     => $map2,
+            'map3'     => $map3,
+            'resultAMap1'     => $resultAMap1,        
+            'resultAMap2'     => $resultAMap2,        
+            'resultAMap3'     => $resultAMap3,        
+            'resultBMap1'     => $resultBMap1,        
+            'resultBMap2'     => $resultBMap2,        
+            'resultBMap3'     => $resultBMap3,             
+            'resultA'     => $resultA,             
+            'resultB'     => $resultB,             
+            'win'     => $win,             
+            'created_at' => $created_at,
+            'canBeEdited' => $canBeEdited));
       return true;
     }
 

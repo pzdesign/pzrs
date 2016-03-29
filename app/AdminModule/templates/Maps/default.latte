@@ -8,14 +8,14 @@ function closeForm(){
 */
 
 function moveUpload(img){
-  $( "#uploadImgName" ).val( img );
+  $( "#uploadImg" ).val( img );
 }
 
 </script>
 {snippet postsList} 
 <!-- Main component for a primary marketing message or call to action -->
 <div class="wrapper-admin">   
-    <h2>Maps</h2>
+    <h2>Enemy</h2>
     <button class="btn btn-success " role="button" data-toggle="modal" data-target="#addPostForm">Add</button><br>
 
             {if $posts->fetch() == false}
@@ -40,10 +40,10 @@ function moveUpload(img){
             <tr> 
                 <td>{$post->id}</td> 
                 {*<td class="hidden-xs datetime">{$post->autor}</td>*}
-                <td>{$post->name}</td>
+                <td>{$post->mapName}</td>
                 <td> 
-                    {if file_exists($absImagePath. '/' .$posts[$key]->img) && $posts[$key]->img != null}
-                    <img src="{$basePath}/{$post->img}" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/{$post->img}">'>
+                    {if file_exists($absImagePath. '/' .$posts[$key]->mapImg) && $posts[$key]->mapImg != null}
+                    <img src="{$basePath}/{$post->mapImg}" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/{$post->mapImg}">'>
                     {else}
                     <img src="{$basePath}/img/empty.png" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/img/empty.png">'>
                     {/if}    
@@ -101,18 +101,18 @@ function moveUpload(img){
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h2>Add new Team</h2>
+                <h2>Add new Map</h2>
             </div>
        <div class="modal-body">                 
         <div class="row">             
             <div class="col-sm-12 logoUploadForm">
                 <div class="col-sm-6 col-sm-offset-3">              
-                    {snippet mapUploadFormSnippet}                
-                        {form mapUploadForm, class => ajax} 
+                    {snippet mapImgUploadSnippet}                
+                        {form mapImgUpload, class => ajax} 
                             <div class="col-sm-8">                  
-                                <div class="form-group {if $form['img']->error || $imgUploadFormFailed}has-error{else}{/if} ">                      
-                                    {input img, class => "form-control pull-left", placeholder => "Foto: "}
-                                    <span class="text-danger" n:ifcontent>{$form['img']->error|noescape}</span>                        
+                                <div class="form-group {if $form['mapImg']->error || $mapImgFormFail}has-error{else}{/if} ">                      
+                                    {input mapImg, class => "form-control pull-left", placeholder => "Foto: "}
+                                    <span class="text-danger" n:ifcontent>{$form['mapImg']->error|noescape}</span>                        
                                 </div>  
                                 <div class="form-group">                      
                                 </div>                                                  
@@ -121,11 +121,11 @@ function moveUpload(img){
                                 {input upload, class => "btn btn-default "}         
                             </div>         
                         {/form}    
-                        {if $mapUploadClick }
+                        {if $mapImgUploadClick }
                                 <script>
                                     moveUpload({$mapImgName});
                                 </script>
-                            {if $mapUploadDone && $mapImgName} 
+                            {if $mapImgUploadDone && $mapImgName} 
 
                                 <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$mapImgName}">
                                 <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$mapImgName}   </div>
@@ -153,12 +153,12 @@ function moveUpload(img){
                         <div class="col-sm-6 col-sm-offset-3"> 
                         <div class="form-group {if $form['mapName']->error}has-error{else}{/if} ">                                                         
                             {label mapName /}                       
-                            {input mapName, class => "form-control col-lg-6", placeholder => "Map name: ", required, autofocus => true} <br>  
+                            {input mapName, class => "form-control col-lg-6", placeholder => "Map Name: ", required, autofocus => true} <br>  
                             <span class="text-danger" n:ifcontent>{$form['mapName']->error|noescape}</span>
                         </div>
                         <div class="col-sm-12">
-                            {label mapNameImg /}                       
-                            {input mapNameImg, class => "form-control", required} <br> 
+                                {label mapImgHidden /}                       
+                                {input mapImgHidden, class => "form-control", required} <br> 
                         </div>          
                         </div>    
                     </div>

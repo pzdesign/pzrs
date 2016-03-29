@@ -33,7 +33,7 @@ class MapManager extends TableManager {
     }
 
     public function findByName($name){
-    return $this->findBy(array('teamA' => $name));
+    return $this->findBy(array('mapName' => $name));
     }
 
 /*
@@ -41,30 +41,30 @@ class MapManager extends TableManager {
     $this->findBy(array('id' => $id))->update(array("title" => $title, 'teaser' => $teaser, 'active' => $active));
     }
 */
-    public function editPost($id, $teamA, $teamALogo, $created_at){
+    public function editPost($id, $mapName, $mapImg, $active){
     $this->findBy(array('id' => $id))->update(array(
-            'teamA'     => $teamA,
-            'teamALogo'     => $teamALogo,
-            'created_at' => $created_at));
+            'mapName'     => $mapName,
+            'mapImg'     => $mapImg,
+            'active' => $active));
     }
 
     public function delImg($id, $img){
-    $this->findBy(array('id' => $id))->update(array('teamALogo' => null));
+    $this->findBy(array('id' => $id))->update(array('mapImg' => null));
     }
 
     public function updateImg($id, $old, $new){
-    $this->findBy(array('id' => $id))->update(array('teamALogo' => $new));
+    $this->findBy(array('id' => $id))->update(array('mapImg' => $new));
     }
 
     public function setActive($id, $active){
     $this->findBy(array("id" => $id))->update(array("active" => $active));
     }   
     
-    public function addItem($teamA, $teamALogo, $created_at){
+    public function addItem($mapName, $mapImg, $active){
       $query = $this->findAll()->insert(array(
-            'teamA'     => $teamA,
-            'teamALogo'     => $teamALogo,
-            'created_at' => $created_at));
+            'mapName'     => $mapName,
+            'mapImg'     => $mapImg,
+            'active' => $active));
       return true;
     }
 
