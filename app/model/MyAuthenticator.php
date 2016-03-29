@@ -5,12 +5,12 @@ class MyAuthenticator extends Nette\Object implements NS\IAuthenticator
 {
     private $database;
 
-    function __construct(Nette\Database\Context $database)
+    public function __construct(Nette\Database\Context $database)
     {
         $this->database = $database;
     }
 
-    function authenticate(array $credentials)
+    public function authenticate(array $credentials)
     {
         list($username, $password) = $credentials;
         $row = $this->database->table('pzrs_users')

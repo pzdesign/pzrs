@@ -1,7 +1,6 @@
 <?php 
 namespace App\Model;
 
-
 class MyValidators
 {
     const USERNAME = 'UserFormRules::validateUsername';
