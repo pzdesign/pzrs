@@ -1,61 +1,61 @@
 {block content}
 <script>
 
-function moveUploadA(img){
-  $( "#uploadImgNameA" ).val( img );
-}
+    function moveUploadA(img){
+      $( "#uploadImgNameA" ).val( img );
+  }
 
 </script>
 <div class="wrapper-admin">      
     <h2>Edit enemy team - {$post->teamA}</h2>
-        <div class="col-sm-6 col-sm-offset-3">   
-    {snippet teamALogoForm}
-            {if $uploadDone} upload-TRUE {else} upload-FALSE{/if}<br>
-            {if $removeDone} remove-TRUE {else} removed-FALSE{/if}<br>
-            {if $editDone} edit-TRUE {else} edit-FALSE{/if}<br>
+    <div class="col-sm-6 col-sm-offset-3">   
+        {snippet teamALogoForm}
+        {if $uploadDone} upload-TRUE {else} upload-FALSE{/if}<br>
+        {if $removeDone} remove-TRUE {else} removed-FALSE{/if}<br>
+        {if $editDone} edit-TRUE {else} edit-FALSE{/if}<br>
 
-            {$absImagePath. '/' .$post->teamALogo}
+        {$absImagePath. '/' .$post->teamALogo}
 
-            {form teamALogoUpload, class => ajax}
-            {if (!$uploadDone && $post->teamALogo == null) || $removeDone || (!$uploadDone && !file_exists($absImagePath. '/' .$post->teamALogo))}                        
-            <div class="col-sm-8">          
-                <div class="form-group {if $form['teamALogo']->error}has-error{else}{/if} ">                            
-                    {input teamALogo , class => "form-control pull-left", placeholder => "Foto: "}      <br>            
-                    <span class="text-danger" n:ifcontent>{$form['teamALogo']->error|noescape}</span>                        
-                </div>             
-            </div>         
-            <div class="col-sm-4">
-                {input uploadA, class => "btn btn-default pull-right"}         
-            </div>        
+        {form teamALogoUpload, class => ajax}
+        {if (!$uploadDone && $post->teamALogo == null) || $removeDone || (!$uploadDone && !file_exists($absImagePath. '/' .$post->teamALogo))}                        
+        <div class="col-sm-8">          
+            <div class="form-group {if $form['teamALogo']->error}has-error{else}{/if} ">                            
+                {input teamALogo , class => "form-control pull-left", placeholder => "Foto: "}      <br>            
+                <span class="text-danger" n:ifcontent>{$form['teamALogo']->error|noescape}</span>                        
+            </div>             
+        </div>         
+        <div class="col-sm-4">
+            {input uploadA, class => "btn btn-default pull-right"}         
+        </div>        
 
         {/if}                                                                   
-    {/form}
-    {if $uploadDone}    
+        {/form}
+        {if $uploadDone}    
         <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$imgName}" alt="cache">
         <a class="btn btn-danger btn-sm tltp ajax" title="Delete img cache" n:href="removeCacheImg! $imgName"><i class="fa fa-trash"></i></a>
         
         <script>
             moveUploadA({$imgName});
         </script>
-    {/if} 
+        {/if} 
 
-    {if file_exists($absImagePath. '/' .$post->teamALogo) && !$uploadDone && $post->teamALogo != null || ($editDone && $post->teamALogo)} 
-          
+        {if file_exists($absImagePath. '/' .$post->teamALogo) && !$uploadDone && $post->teamALogo != null || ($editDone && $post->teamALogo)} 
+
         <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$post->teamALogo}" alt="storage">B                  
         <a class="btn btn-danger btn-sm tltp ajax" title="Delete img storage" n:href="removeImg! $post->id"><i class="fa fa-trash"></i></a> 
-    
-    {elseif $uploadDone}
-    
+
+        {elseif $uploadDone}
+
         <script>
             moveUploadA({$imgName});
         </script>
-     
+
         <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$imgName}   </div>
-    
-    {else}
+
+        {else}
         <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br> {$post->teamALogo}</div> 
-    {/if}   
-    {/snippet}
+        {/if}   
+        {/snippet}
 
         <div class="row">             
             <div class="col-sm-12 logoUploadForm">
@@ -66,28 +66,28 @@ function moveUploadA(img){
                 </script>
                 {/if}
                 {form editPostForm, class => ajax}                              
-                    <div class="col-sm-12">   
-                        <div class="form-group {if $form['teamA']->error}has-error{else}{/if} ">                                                         
-                            {label teamA /}                       
-                            {input teamA, class => "form-control col-lg-6", placeholder => "Team Name: ", required, autofocus => true} <br>  
-                            <span class="text-danger" n:ifcontent>{$form['teamA']->error|noescape}</span>
-                        </div>
-                        <div class="col-sm-12">
-                                {label logoTeamA /}                       
-                                {input logoTeamA value => $post->teamALogo, class => "form-control", required} <br> 
-                        </div>          
-   
-                    </div>  
-                    {input submit, class => "btn btn-success mySubmit"}
-                    {input cancel, class => "btn btn-danger mySubmit"} 
+                <div class="col-sm-12">   
+                    <div class="form-group {if $form['teamA']->error}has-error{else}{/if} ">                                                         
+                        {label teamA /}                       
+                        {input teamA, class => "form-control col-lg-6", placeholder => "Team Name: ", required, autofocus => true} <br>  
+                        <span class="text-danger" n:ifcontent>{$form['teamA']->error|noescape}</span>
+                    </div>
+                    <div class="col-sm-12">
+                        {label logoTeamA /}                       
+                        {input logoTeamA value => $post->teamALogo, class => "form-control", required} <br> 
+                    </div>          
+
+                </div>  
+                {input submit, class => "btn btn-success mySubmit"}
+                {input cancel, class => "btn btn-danger mySubmit"} 
                 {/form}
                 {/snippet}                                               
             </div>
         </div>     
-                
 
-<div> 
-  </div>               
+
+        <div> 
+        </div>               
 {/block}
 
 

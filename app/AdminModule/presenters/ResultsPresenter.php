@@ -93,13 +93,13 @@ class ResultsPresenter extends BasePresenter
         $form->addSelect('teamB', 'Enemy:')->setItems($this->teamsBArray, false);
 
         $form->addSelect('map1', 'Map1:')->setItems($this->mapsArray, false)
-                ->setAttribute('id', 'map1select');
+        ->setAttribute('id', 'map1select');
 
         $form->addSelect('map2', 'Map2:')->setItems($this->mapsArray, false)
-                ->setAttribute('id', 'map2select');
+        ->setAttribute('id', 'map2select');
 
         $form->addSelect('map3', 'Map3:')->setItems($this->mapsArray, false)
-                ->setAttribute('id', 'map3select');
+        ->setAttribute('id', 'map3select');
 
         /*
         $form->addSelect('map4', 'Map4:')->setItems($mapsArray, FALSE);
@@ -167,9 +167,9 @@ class ResultsPresenter extends BasePresenter
         }
 
         if ($values->map1 != 'None') { // validační podmínka   
-             if ($values->resultAMap1 == null) {
-                 $form['resultAMap1']->addError(' ');
-             }
+            if ($values->resultAMap1 == null) {
+                $form['resultAMap1']->addError(' ');
+            }
             if ($values->resultBMap1 == null) {
                 $form['resultBMap1']->addError(' ');
             }
@@ -195,7 +195,7 @@ class ResultsPresenter extends BasePresenter
         $resultA = 0;
         $resultB = 0;
         $win = 'L';
-            
+        
 
         if ($values->resultAMap1 > $values->resultBMap1) {
             $resultA++;
@@ -209,14 +209,14 @@ class ResultsPresenter extends BasePresenter
         } elseif ($values->resultAMap2 < $values->resultBMap2) {
             $resultB++;
         }
-    
+        
 
         if ($values->resultAMap3 > $values->resultBMap3) {
             $resultA++;
         } elseif ($values->resultAMap3 < $values->resultBMap3) {
             $resultB++;
         }
-    
+        
 
         if ($resultA > $resultB) {
             $win = 'W';
@@ -225,7 +225,7 @@ class ResultsPresenter extends BasePresenter
             $resultA = 1;
             $resultB = 1;
         }
-            
+        
 
         $query = $this->rm->addItem(
             $values->teamA,
@@ -248,10 +248,10 @@ class ResultsPresenter extends BasePresenter
             $canBeEdited);
         if ($query) {
             $form->setValues(array(), true);
-    
+            
             $this->payload->resetForm = true;
 
-                                
+            
             $this->redrawControl('addNewResultSnippet');
             $this->redrawControl('postsList');
             $this->redrawControl('flashMessages');
@@ -382,9 +382,7 @@ class ResultsPresenter extends BasePresenter
         $post = $this->rm->getById($postId)->fetch();
         $this->rm->removeItem($postId);
         //$this->payload->deleteItem = true; 
-
         $this->flashMessage("Success.", "success");
-
         $this->redrawControl('flashMessages');
         $this->redrawControl('postsList');
     }

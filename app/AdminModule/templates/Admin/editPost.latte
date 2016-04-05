@@ -13,100 +13,100 @@ function moveUpload(img){
 </script>
 
 <div class="wrapper-admin">      
-<h2>Upravit článek</h2>
+    <h2>Upravit článek</h2>
 
-{snippet uploadForm}
-{if $uploadDone} upload-TRUE {else} upload-FALSE{/if}<br>
-{if $removeDone} remove-TRUE {else} removed-FALSE{/if}<br>
-{if $editDone} edit-TRUE {else} edit-FALSE{/if}<br>
+    {snippet uploadForm}
+    {if $uploadDone} upload-TRUE {else} upload-FALSE{/if}<br>
+    {if $removeDone} remove-TRUE {else} removed-FALSE{/if}<br>
+    {if $editDone} edit-TRUE {else} edit-FALSE{/if}<br>
 
-{$absImagePath. '/' .$post->img}
+    {$absImagePath. '/' .$post->img}
 
-                    {form addPostFormUpload, class => ajax}
-{if (!$uploadDone && $post->img == null) || $removeDone || (!$uploadDone && !file_exists($absImagePath. '/' .$post->img))}                        
-                        {input img, class => "form-control pull-left animated fadeIn", placeholder => "Foto: "}      <br> 
-                      
-                        {input upload, class => "btn btn-info uploadButton pull-left"} 
-{/if}                                                                   
-                    {/form}
-{if $uploadDone}    
+    {form addPostFormUpload, class => ajax}
+    {if (!$uploadDone && $post->img == null) || $removeDone || (!$uploadDone && !file_exists($absImagePath. '/' .$post->img))}                        
+    {input img, class => "form-control pull-left animated fadeIn", placeholder => "Foto: "}      <br> 
+
+    {input upload, class => "btn btn-info uploadButton pull-left"} 
+    {/if}                                                                   
+    {/form}
+    {if $uploadDone}    
     <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$imgName}" alt="cache">
     <a class="btn btn-danger btn-sm tltp ajax" title="Delete img cache" n:href="removeCacheImg! $imgName"><i class="fa fa-trash"></i></a>
-<script>
-    moveUpload({$imgName});
-</script>
- {/if} 
+    <script>
+        moveUpload({$imgName});
+    </script>
+    {/if} 
 
-{if file_exists($absImagePath. '/' .$post->img) && !$uploadDone && $post->img != null || ($editDone && $post->img)} 
-          
+    {if file_exists($absImagePath. '/' .$post->img) && !$uploadDone && $post->img != null || ($editDone && $post->img)} 
+
     <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$post->img}" alt="storage">B                  
     <a class="btn btn-danger btn-sm tltp ajax" title="Delete img storage" n:href="removeImg! $post->id"><i class="fa fa-trash"></i></a> 
 
-{elseif $uploadDone}
-<script>
-    moveUpload({$imgName});
-</script>
+    {elseif $uploadDone}
+    <script>
+        moveUpload({$imgName});
+    </script>
     <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$imgName}   </div>
 
     {else}
 
     <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br> {$post->img}</div>
-  
-{/if} 
 
-     
-{/snippet}
-{*                  
+    {/if} 
 
 
-{elseif $post->img != null && file_exists($absImagePath. '/' .$post->img)}
-     <img class="upload-thumb img-thumbnail" src="{$basePath}/{$post->img}" alt="b">B  
-{/if}
-
-{if $post->img != null && file_exists($absImagePath. '/' .$post->img) || $uploadDone}
-
-<a class="btn btn-danger btn-sm tltp" title="Delete img B"
-data-confirm="modal"
-data-confirm-title="Smazat tento obrázek"
-data-confirm-text="Delete?"
-data-confirm-ok-class="btn-danger"
-data-confirm-ok-text="Delete"
-data-confirm-cancel-class="btn-success"
-data-confirm-cancel-text="Cancel"
-class="btn btn-danger btn-mini pull-right"
-data-ajax="on"
-n:href="removeImg! $post->id"><i class="fa fa-trash"></i></a>
-{/if}
-*}
+    {/snippet}
+    {*                  
 
 
+    {elseif $post->img != null && file_exists($absImagePath. '/' .$post->img)}
+    <img class="upload-thumb img-thumbnail" src="{$basePath}/{$post->img}" alt="b">B  
+    {/if}
 
-{snippet editPostForm}
-{if $editDone}
-<script>
-    moveUpload({$imgName});
-</script>
-{/if}
-                    {form editPostForm, class => ajax}                
-						 				
-                        {input title, class => "form-control", placeholder => "Titulek: ", required, autofocus => true}<br> 
-					
-						{label teaser /}                       
-                        {input teaser, class => "form-control", placeholder => "Náhled: ", required} <br>  
+    {if $post->img != null && file_exists($absImagePath. '/' .$post->img) || $uploadDone}
 
-						{label body /} 
-                        {input body, class => "form-control", placeholder => "Obsah: "}      <br>  
-                  
-                        {input slug}  <br>                    
-                        {input img}  <br>                    
-                 
-                    </div>
-                    <div class="modal-footer">
-                        {input submit, class => "btn btn-success mySubmit"}
-                        {input cancel, class => "btn btn-danger mySubmit"}
-             {/form}
-{/snippet} 
-<div>                
+    <a class="btn btn-danger btn-sm tltp" title="Delete img B"
+    data-confirm="modal"
+    data-confirm-title="Smazat tento obrázek"
+    data-confirm-text="Delete?"
+    data-confirm-ok-class="btn-danger"
+    data-confirm-ok-text="Delete"
+    data-confirm-cancel-class="btn-success"
+    data-confirm-cancel-text="Cancel"
+    class="btn btn-danger btn-mini pull-right"
+    data-ajax="on"
+    n:href="removeImg! $post->id"><i class="fa fa-trash"></i></a>
+    {/if}
+    *}
+
+
+
+    {snippet editPostForm}
+    {if $editDone}
+    <script>
+        moveUpload({$imgName});
+    </script>
+    {/if}
+    {form editPostForm, class => ajax}                
+
+    {input title, class => "form-control", placeholder => "Titulek: ", required, autofocus => true}<br> 
+
+    {label teaser /}                       
+    {input teaser, class => "form-control", placeholder => "Náhled: ", required} <br>  
+
+    {label body /} 
+    {input body, class => "form-control", placeholder => "Obsah: "}      <br>  
+
+    {input slug}  <br>                    
+    {input img}  <br>                    
+
+</div>
+<div class="modal-footer">
+    {input submit, class => "btn btn-success mySubmit"}
+    {input cancel, class => "btn btn-danger mySubmit"}
+    {/form}
+    {/snippet} 
+</div>                
 {/block}
 
 

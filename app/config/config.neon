@@ -30,6 +30,7 @@ services:
 	tm:	App\Model\TeamsManager
 	em:	App\Model\EnemyManager
 	mm:	App\Model\MapManager
+	plm: App\Model\PlayersManager
 
 #security:
     #users:

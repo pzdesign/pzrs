@@ -2,22 +2,22 @@
 
 <script>
 
-function moveUploadA(img){
-  $( "#uploadImgNameA" ).val( img );
-}
+    function moveUploadA(img){
+      $( "#uploadImgNameA" ).val( img );
+  }
 
-function moveUploadB(img){
-  $( "#uploadImgNameB" ).val( img );
-}
+  function moveUploadB(img){
+      $( "#uploadImgNameB" ).val( img );
+  }
 
-function changeBgMap1(){
+  function changeBgMap1(){
     //var newpath = {!$absImagePath}+'upload/maps/dust2.jpg';   
     var abspath = {$basePath}+'/upload/maps/';   
     var map = $( "#map1select option:selected" ).text(); 
     $("#map1").css({ 
         'background': 'url('+abspath+map+'.jpg)',
         'background-size':'cover' 
-     }); 
+    }); 
 }
 function changeBgMap2(){
     //var newpath = {!$absImagePath}+'upload/maps/dust2.jpg';   
@@ -26,7 +26,7 @@ function changeBgMap2(){
     $("#map2").css({ 
         'background': 'url('+abspath+map+'.jpg)',
         'background-size':'cover' 
-     }); 
+    }); 
 }
 function changeBgMap3(){
     //var newpath = {!$absImagePath}+'upload/maps/dust2.jpg';   
@@ -35,7 +35,7 @@ function changeBgMap3(){
     $("#map3").css({ 
         'background': 'url('+abspath+map+'.jpg)',
         'background-size':'cover' 
-     }); 
+    }); 
 }
 
 </script>
@@ -44,9 +44,9 @@ function changeBgMap3(){
 <div class="wrapper-admin">   
     <h2>Zápasy</h2>
     <button class="btn btn-success" role="button" data-toggle="modal" data-target="#addPostForm">Přidat</button><br>
-            {if $posts->fetch() == false}
-            <div class="alert-relative alert-danger">Nemám žádné příspěvky</div>
-            {else} 
+    {if $posts->fetch() == false}
+    <div class="alert-relative alert-danger">Nemám žádné příspěvky</div>
+    {else} 
     <table id="postsTable" class="table table-striped"> 
         <thead> 
 
@@ -100,9 +100,9 @@ function changeBgMap3(){
             </td>    
             <td>{$post->teamB}</td> 
             <td class="hidden-xs datetime">
-            {$post->map1}{if $post->map2 !='None'},{else}{/if}
-            {if $post->map2 !='None'}{$post->map2}{/if}{if $post->map3 !='None'},{else}{/if}
-            {if $post->map3 !='None'}{$post->map3}{/if}
+                {$post->map1}{if $post->map2 !='None'},{else}{/if}
+                {if $post->map2 !='None'}{$post->map2}{/if}{if $post->map3 !='None'},{else}{/if}
+                {if $post->map3 !='None'}{$post->map3}{/if}
             </td> 
             {if $post->canBeEdited}     
             <td><a n:href="Results:editPost $post->id" class="btn btn-primary btn-sm tltp" title="Edit Post"><i class="fa fa-pencil"></i></a></td>        
@@ -139,7 +139,7 @@ function changeBgMap3(){
 
                 {/foreach} 
 
-                      
+                
 
 
             </tbody> 
@@ -152,10 +152,10 @@ function changeBgMap3(){
                 <li {if $paginator->last}class="disabled"{/if}><a class="ajax {if $paginator->last == false}disabled{/if}" n:href="change! $paginator->getPage()+1">&raquo;</a></li>
             </ul>
         </div>  
- 
+        
 
     </div>
- {/if}   
+    {/if}   
 </div>
 {/snippet} 
 
@@ -166,129 +166,129 @@ function changeBgMap3(){
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h2>Add new Result</h2>
             </div>
-       <div class="modal-body">                 
+            <div class="modal-body">                 
 
-            {snippet addNewResultSnippet} 
-            {form addNewResultForm, class => ajax}                
-            <div class="modal-body">
-              
-                <ul class="alert-relative alert-danger animated flash" n:if="$form->hasErrors()">
-                    <li n:foreach="$form->errors as $error">{$error}</li>
-                </ul>  
-                
-                <div class="row">                  
-                    <div class="col-sm-12">   
-                        <div class="col-sm-6">                   
-                        <div class="form-group {if $form['teamA']->error}has-error{else}{/if} ">                                                         
-                            {label teamA /}                       
-                            {input teamA, class => "form-control col-lg-6", placeholder => "Team A: ", required, autofocus => true} <br>  
-                            <span class="text-danger" n:ifcontent>{$form['teamA']->error|noescape}</span>
-                        </div>      
-                        </div>
-                        <div class="col-sm-6"> 
-                        <div class="form-group {if $form['teamB']->error}has-error{else}{/if} ">                                                         
-                            {label teamB /}                       
-                            {input teamB, class => "form-control col-lg-6", placeholder => "Team B: ", required, autofocus => true} <br>  
-                            <span class="text-danger" n:ifcontent>{$form['teamB']->error|noescape}</span>
-                        
-                        </div>         
-                    </div>
-                </div>
-                <br><br><br><br>
-                    <div class="col-sm-12">   
-
-                        <div id="map1" class="col-sm-6 col-sm-offset-3 map">                   
-                            <div class="form-group {if $form['map1']->error}has-error{else}{/if} ">                                                         
-                                {label map1 /}                       
-                                {input map1 , onChange => "changeBgMap1()", class => "form-control col-sm-2", placeholder => "Map 1: "} <br> 
+                {snippet addNewResultSnippet} 
+                {form addNewResultForm, class => ajax}                
+                <div class="modal-body">
+                  
+                    <ul class="alert-relative alert-danger animated flash" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>  
+                    
+                    <div class="row">                  
+                        <div class="col-sm-12">   
+                            <div class="col-sm-6">                   
+                                <div class="form-group {if $form['teamA']->error}has-error{else}{/if} ">                                                         
+                                    {label teamA /}                       
+                                    {input teamA, class => "form-control col-lg-6", placeholder => "Team A: ", required, autofocus => true} <br>  
+                                    <span class="text-danger" n:ifcontent>{$form['teamA']->error|noescape}</span>
+                                </div>      
                             </div>
+                            <div class="col-sm-6"> 
+                                <div class="form-group {if $form['teamB']->error}has-error{else}{/if} ">                                                         
+                                    {label teamB /}                       
+                                    {input teamB, class => "form-control col-lg-6", placeholder => "Team B: ", required, autofocus => true} <br>  
+                                    <span class="text-danger" n:ifcontent>{$form['teamB']->error|noescape}</span>
+                                    
+                                </div>         
+                            </div>
+                        </div>
+                        <br><br><br><br>
+                        <div class="col-sm-12">   
+
+                            <div id="map1" class="col-sm-6 col-sm-offset-3 map">                   
+                                <div class="form-group {if $form['map1']->error}has-error{else}{/if} ">                                                         
+                                    {label map1 /}                       
+                                    {input map1 , onChange => "changeBgMap1()", class => "form-control col-sm-2", placeholder => "Map 1: "} <br> 
+                                </div>
                                 <div class="col-sm-4 col-sm-offset-2 ">                   
                                     <div class="form-group {if $form['resultAMap1']->error}has-error{else}{/if} ">                                                         
                                         {label resultAMap1 /}                       
                                         {input resultAMap1, class => "form-control col-lg-6", placeholder => "A "} <br> 
                                     </div>      
                                 </div>
-                           
+                                
                                 <div class="col-sm-4 ">                   
                                     <div class="form-group {if $form['resultBMap1']->error}has-error{else}{/if} ">                                                         
                                         {label resultBMap1 /}                       
                                         {input resultBMap1, class => "form-control col-lg-6", placeholder => "B "} <br>  
                                     </div>      
                                 </div>                             
-                        <div class="col-sm-6 col-sm-offset-3">                             
-                            <span class="text-danger" n:ifcontent>{$form['map1']->error|noescape}</span>                                
-                        </div> 
+                                <div class="col-sm-6 col-sm-offset-3">                             
+                                    <span class="text-danger" n:ifcontent>{$form['map1']->error|noescape}</span>                                
+                                </div> 
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-sm-12">   
+                        <div class="col-sm-12">   
 
-                        <div id="map2" class="col-sm-6 col-sm-offset-3 map">                   
-                            <div class="form-group {if $form['map2']->error}has-error{else}{/if} ">                                                         
-                                {label map2 /}                       
-                                {input map2, onChange => "changeBgMap2()", class => "form-control col-lg-6", placeholder => "Map 2: "} <br> 
+                            <div id="map2" class="col-sm-6 col-sm-offset-3 map">                   
+                                <div class="form-group {if $form['map2']->error}has-error{else}{/if} ">                                                         
+                                    {label map2 /}                       
+                                    {input map2, onChange => "changeBgMap2()", class => "form-control col-lg-6", placeholder => "Map 2: "} <br> 
+                                </div>
+                                <div class="col-sm-4 col-sm-offset-2 ">                   
+                                    <div class="form-group">                                                         
+                                        {label resultAMap2 /}                       
+                                        {input resultAMap2, class => "form-control col-lg-6", placeholder => "A "} <br> 
+                                    </div>      
+                                </div>
+                                <div class="col-sm-4 ">                   
+                                    <div class="form-group">                                                         
+                                        {label resultBMap2 /}                       
+                                        {input resultBMap2, class => "form-control col-lg-6", placeholder => "B "} <br>  
+                                    </div>      
+                                </div>                             
+                                <div class="col-sm-6 col-sm-offset-3">                             
+                                    <span class="text-danger" n:ifcontent>{$form['map2']->error|noescape}</span>                                
+                                </div> 
                             </div>
-                            <div class="col-sm-4 col-sm-offset-2 ">                   
-                                <div class="form-group">                                                         
-                                    {label resultAMap2 /}                       
-                                    {input resultAMap2, class => "form-control col-lg-6", placeholder => "A "} <br> 
-                                </div>      
-                            </div>
-                            <div class="col-sm-4 ">                   
-                                <div class="form-group">                                                         
-                                    {label resultBMap2 /}                       
-                                    {input resultBMap2, class => "form-control col-lg-6", placeholder => "B "} <br>  
-                                </div>      
-                            </div>                             
-                            <div class="col-sm-6 col-sm-offset-3">                             
-                                <span class="text-danger" n:ifcontent>{$form['map2']->error|noescape}</span>                                
-                            </div> 
                         </div>
-                    </div>
 
-                    <div class="col-sm-12">   
+                        <div class="col-sm-12">   
 
-                        <div id="map3" class="col-sm-6 col-sm-offset-3 map">                   
-                            <div class="form-group {if $form['map3']->error}has-error{else}{/if} ">                                                         
-                                {label map3 /}                       
-                                {input map3, onChange => "changeBgMap3()", class => "form-control col-lg-6", placeholder => "Map 3: "} <br> 
-                            </div>
+                            <div id="map3" class="col-sm-6 col-sm-offset-3 map">                   
+                                <div class="form-group {if $form['map3']->error}has-error{else}{/if} ">                                                         
+                                    {label map3 /}                       
+                                    {input map3, onChange => "changeBgMap3()", class => "form-control col-lg-6", placeholder => "Map 3: "} <br> 
+                                </div>
                                 <div class="col-sm-4 col-sm-offset-2 ">                   
                                     <div class="form-group">                                                         
                                         {label resultAMap3 /}                       
                                         {input resultAMap3, class => "form-control col-lg-6", placeholder => "A "} <br> 
                                     </div>      
                                 </div>
-                           
+                                
                                 <div class="col-sm-4 ">                   
                                     <div class="form-group">                                                         
                                         {label resultBMap3 /}                       
                                         {input resultBMap3, class => "form-control col-lg-6", placeholder => "B "} <br>  
                                     </div>      
                                 </div>                             
-                            <div class="col-sm-6 col-sm-offset-3">                             
-                                <span class="text-danger" n:ifcontent>{$form['map3']->error|noescape}</span>                                
-                            </div> 
-                        </div>
-                    </div> 
+                                <div class="col-sm-6 col-sm-offset-3">                             
+                                    <span class="text-danger" n:ifcontent>{$form['map3']->error|noescape}</span>                                
+                                </div> 
+                            </div>
+                        </div> 
 
-                    <div class="col-sm-12">   
- 
-                                             
+                        <div class="col-sm-12">   
+                           
+                           
 
-                                                                       
-                       {*  
-                        <div class="col-sm-4">                   
-                        <div class="form-group">                                                         
-                            {label map4 /}                       
-                            {input map4, class => "form-control col-lg-6", placeholder => "Map 4: ", required, autofocus => true} <br>  
-                        </div>      
+                         
+                         {*  
+                         <div class="col-sm-4">                   
+                            <div class="form-group">                                                         
+                                {label map4 /}                       
+                                {input map4, class => "form-control col-lg-6", placeholder => "Map 4: ", required, autofocus => true} <br>  
+                            </div>      
                         </div>
                         <div class="col-sm-4">                   
-                        <div class="form-group">                                                         
-                            {label map5 /}                       
-                            {input map5, class => "form-control col-lg-6", placeholder => "Map 5: ", required, autofocus => true} <br>  
-                        </div>      
+                            <div class="form-group">                                                         
+                                {label map5 /}                       
+                                {input map5, class => "form-control col-lg-6", placeholder => "Map 5: ", required, autofocus => true} <br>  
+                            </div>      
                         </div>                        
                         *}
                     </div>

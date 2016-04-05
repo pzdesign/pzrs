@@ -18,9 +18,9 @@ function moveUpload(img){
     <h2>Enemy</h2>
     <button class="btn btn-success " role="button" data-toggle="modal" data-target="#addPostForm">Add</button><br>
 
-            {if $posts->fetch() == false}
-            <div class="alert-relative alert-danger">Nothing :(</div>
-            {else} 
+    {if $posts->fetch() == false}
+    <div class="alert-relative alert-danger">Nothing :(</div>
+    {else} 
     <table id="postsTable" class="table table-striped"> 
         <thead> 
 
@@ -48,19 +48,19 @@ function moveUpload(img){
                     <img src="{$basePath}/img/empty.png" class="img-small tltp" data-toggle="tooltip" title='<img class="img-responsive" src="{$basePath}/img/empty.png">'>
                     {/if}    
                 </td>                      
-            <td><a n:href="Enemy:editPost $post->id" class="btn btn-primary btn-sm tltp" title="Edit Post"><i class="fa fa-pencil"></i></a></td>        
-            <td>
-                {if $post->active == 1}
-                <a n:href="inactive! $post->id" class="btn btn-success btn-sm ajax tltp" title="Hide post">
-                    <i class='fa fa-eye'></i>
-                </a>
+                <td><a n:href="Enemy:editPost $post->id" class="btn btn-primary btn-sm tltp" title="Edit Post"><i class="fa fa-pencil"></i></a></td>        
+                <td>
+                    {if $post->active == 1}
+                    <a n:href="inactive! $post->id" class="btn btn-success btn-sm ajax tltp" title="Hide post">
+                        <i class='fa fa-eye'></i>
+                    </a>
 
-                {else}
+                    {else}
 
-                <a n:href="active! $post->id" class="btn btn-warning btn-sm  ajax tltp" title="Show post">
-                    <i class='fa fa-eye-slash'></i>
-                </a>{/if}
-            </td>
+                    <a n:href="active! $post->id" class="btn btn-warning btn-sm  ajax tltp" title="Show post">
+                        <i class='fa fa-eye-slash'></i>
+                    </a>{/if}
+                </td>
 
                 <td><a class="btn btn-danger btn-sm tltp" title="Delete post"
                     data-confirm="modal"
@@ -77,7 +77,7 @@ function moveUpload(img){
                 </tr>
                 {/foreach} 
 
-                      
+                
 
 
             </tbody> 
@@ -90,7 +90,7 @@ function moveUpload(img){
                 <li {if $paginator->last}class="disabled"{/if}><a class="ajax {if $paginator->last == false}disabled{/if}" n:href="change! $paginator->getPage()+1">&raquo;</a></li>
             </ul>
         </div>  
- {/if}
+        {/if}
 
     </div>
 </div>
@@ -103,12 +103,12 @@ function moveUpload(img){
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h2>Add new Map</h2>
             </div>
-       <div class="modal-body">                 
-        <div class="row">             
-            <div class="col-sm-12 logoUploadForm">
-                <div class="col-sm-6 col-sm-offset-3">              
-                    {snippet mapImgUploadSnippet}                
-                        {form mapImgUpload, class => ajax} 
+            <div class="modal-body">                 
+                <div class="row">             
+                    <div class="col-sm-12 logoUploadForm">
+                        <div class="col-sm-6 col-sm-offset-3">              
+                            {snippet mapImgUploadSnippet}                
+                            {form mapImgUpload, class => ajax} 
                             <div class="col-sm-8">                  
                                 <div class="form-group {if $form['mapImg']->error || $mapImgFormFail}has-error{else}{/if} ">                      
                                     {input mapImg, class => "form-control pull-left", placeholder => "Foto: "}
@@ -120,59 +120,59 @@ function moveUpload(img){
                             <div class="col-sm-4">
                                 {input upload, class => "btn btn-default "}         
                             </div>         
-                        {/form}    
-                        {if $mapImgUploadClick }
-                                <script>
-                                    moveUpload({$mapImgName});
-                                </script>
+                            {/form}    
+                            {if $mapImgUploadClick }
+                            <script>
+                                moveUpload({$mapImgName});
+                            </script>
                             {if $mapImgUploadDone && $mapImgName} 
 
-                                <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$mapImgName}">
-                                <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$mapImgName}   </div>
+                            <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$mapImgName}">
+                            <div class="alert alert-relative alert-info animated flash">Pro zachování fotografie je potřeba uložit změny! {$mapImgName}   </div>
                             {else}
-                                <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/img/empty.png">
-                                <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br></div>
+                            <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/img/empty.png">
+                            <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br></div>
 
                             {/if}
-                        {/if} 
-                    {/snippet}                 
+                            {/if} 
+                            {/snippet}                 
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-</div>
             {snippet addNewMapSnippet} 
             {form addNewMapForm, class => ajax}                
             <div class="modal-body">
               {*
-                <ul class="alert-relative alert-danger animated flash" n:if="$form->hasErrors()">
-                    <li n:foreach="$form->errors as $error">{$error}</li>
-                </ul>  
-                *}
-                <div class="row">                  
-                    <div class="col-sm-12">   
-                        <div class="col-sm-6 col-sm-offset-3"> 
+              <ul class="alert-relative alert-danger animated flash" n:if="$form->hasErrors()">
+                <li n:foreach="$form->errors as $error">{$error}</li>
+            </ul>  
+            *}
+            <div class="row">                  
+                <div class="col-sm-12">   
+                    <div class="col-sm-6 col-sm-offset-3"> 
                         <div class="form-group {if $form['mapName']->error}has-error{else}{/if} ">                                                         
                             {label mapName /}                       
                             {input mapName, class => "form-control col-lg-6", placeholder => "Map Name: ", required, autofocus => true} <br>  
                             <span class="text-danger" n:ifcontent>{$form['mapName']->error|noescape}</span>
                         </div>
                         <div class="col-sm-12">
-                                {label mapImgHidden /}                       
-                                {input mapImgHidden, class => "form-control", required} <br> 
+                            {label mapImgHidden /}                       
+                            {input mapImgHidden, class => "form-control", required} <br> 
                         </div>          
-                        </div>    
-                    </div>
+                    </div>    
                 </div>
-            </div>                    
-            <div class="modal-footer">
-                {input submit, class => "btn btn-success mySubmit"} 
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Zavřít</button> 
             </div>
-            {/form}          
-            {/snippet}                      
-        </div><!-- /.modal-content -->
+        </div>                    
+        <div class="modal-footer">
+            {input submit, class => "btn btn-success mySubmit"} 
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Zavřít</button> 
+        </div>
+        {/form}          
+        {/snippet}                      
+    </div><!-- /.modal-content -->
 
-    </div><!-- /.modal-dialog -->
+</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->  
 {/block}
 
