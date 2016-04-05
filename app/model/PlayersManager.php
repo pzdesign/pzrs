@@ -72,12 +72,23 @@ class PlayersManager extends TableManager
         $this->findBy(array("id" => $id))->update(array("active" => $active));
     }
     
-    public function addItem($nick, $fn, $ln, $photo)
+    public function addItem($nick, $fn, $ln, $photo, $mouse, $keyboard, $headphones, $cpu, $gpu, $sensitivity, $resolution, $facebook, $twitch, $twitter, $steam)
     {
         $query = $this->findAll()->insert(array(
             'nickname'     => $nick,
             'firstname'     => $fn,
             'lastname'     => $ln,
+            'mouse'     => $mouse,
+            'keyboard'     => $keyboard,
+            'headphones'     => $headphones,
+            'cpu'     => $cpu,
+            'gpu'     => $gpu,
+            'sensitivity'     => $sensitivity,
+            'resolution'     => $resolution,
+            'facebook'     => $facebook,
+            'twitch'     => $twitch,
+            'twitter'     => $twitter,
+            'steam'     => $steam,
             'playerphoto'     => $photo,
             'active'     => 1));
     }

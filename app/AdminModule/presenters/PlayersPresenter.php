@@ -29,7 +29,6 @@ class PlayersPresenter extends BasePresenter
 
     public function actionDefault($page = 1)
     {
-
         $paginator = new Nette\Utils\Paginator;
         $paginator->setItemCount($this->plm->getPostsCount($this->getView()));
         $paginator->setItemsPerPage(10);
@@ -53,6 +52,8 @@ class PlayersPresenter extends BasePresenter
         $this->template->playerPhotoFormUploadClicked = false;
         $this->template->playerPhotoFormUploadDone = false;
         $this->template->playerPhotoFormUploadFail = false;
+        $this->template->playerPhotoRemoved = false;  
+        $this->template->playerPhotoRemovedInfo = false;              
     }
 
     public function renderDefault()
@@ -65,10 +66,23 @@ class PlayersPresenter extends BasePresenter
     protected function createComponentAddNewPlayerForm()
     {
         $form = new Form;
-        $form->addText("nickName", "Nickname: ")->addRule(Form::FILLED, 'Must be filled');
-        $form->addText("firstName", "Firstname: ")->addRule(Form::FILLED, 'Must be filled');
-        $form->addText("lastName", "Lastname: ")->addRule(Form::FILLED, 'Must be filled');
-        $form->addText("playerPhotoInForm")->setAttribute('id', 'playerPhoto')->setAttribute('readonly')
+        $form->addText("nickName", "Nickname: ")->addRule(Form::FILLED, 'Must be filled')->addRule(Form::MIN_LENGTH, 'min length is %d letters', 3);
+        $form->addText("firstName", "Firstname: ");
+        $form->addText("lastName", "Lastname: ");
+
+        $form->addText("mouse", "Mouse: ");
+        $form->addText("keyboard", "Keyboard: ");
+        $form->addText("headphones", "Headphones: ");
+        $form->addText("cpu", "CPU: ");
+        $form->addText("gpu", "GPU: ");
+        $form->addText("sensitivity", "Sensitivity: ");
+        $form->addText("resolution", "Resolution: ");
+        $form->addText("facebook", "Facebook: ");
+        $form->addText("twitch", "Twitch: ");
+        $form->addText("twitter", "Twitter: ");
+        $form->addText("steam", "Steam: ");
+
+        $form->addHidden("playerPhotoInForm")->setAttribute('id', 'playerPhoto')->setAttribute('readonly')
              ->setDefaultValue(null)->addRule(Form::FILLED, 'Must be filled');
 
         $form->addSubmit('submit', 'SAVE');
@@ -82,8 +96,13 @@ class PlayersPresenter extends BasePresenter
 
     public function addNewPlayerFormCheck($form)
     {
-
-       $this->redrawControl('addNewPlayerFormSnippet');
+        $values = $form->getValues();
+        $this->redrawControl('addNewPlayerFormSnippet');   
+        //$this->template->playerPhotoFormUploadFail = true;
+        if(!$values->playerPhotoInForm){
+            $this['playerPhotoFormUpload']['playerPhoto']->addError('Must be filled');
+            $this->redrawControl('playerPhotoFormUploadSnippet');
+        }  
     }
 
     public function addNewPlayerFormSubmit(UI\Form $form, $values)
@@ -93,23 +112,23 @@ class PlayersPresenter extends BasePresenter
         }
         $values = $form->getValues();
 
-            $values->playerPhotoInForm = str_replace('storage/', '', $values->playerPhotoInForm);
-            $this->plm->addItem($values->nickName, $values->firstName, $values->lastName,$values->playerPhotoInForm);
-            $this->flashMessage("SUCCESS", "success");
+        $values->playerPhotoInForm = str_replace('storage/', '', $values->playerPhotoInForm);
+        $this->plm->addItem($values->nickName, $values->firstName, $values->lastName, $values->playerPhotoInForm,
+            $values->mouse, $values->keyboard,$values->headphones, $values->cpu, $values->gpu, $values->sensitivity, $values->resolution,
+            $values->facebook, $values->twitch, $values->twitter, $values->steam);
+        $this->flashMessage("SUCCESS", "success");
            
-            $this->payload->resetForm = true;
-            $form->setValues(array(), true);
-            $this->redrawControl('addNewPlayerForm');
-            $this->redrawControl('addNewPlayerFormSnippet');
-            $this->handlePlayerPhotoSave();
-            $this->paginator->setItemCount($this->plm->getPostsCount());
-            $this->redrawControl('postsList');
-            
+        $this->payload->resetForm = true;
+        $form->setValues(array(), true);
+        $this->redrawControl('addNewPlayerForm');
+        $this->redrawControl('addNewPlayerFormSnippet');
+        $this->handlePlayerPhotoSave();
+        $this->paginator->setItemCount($this->plm->getPostsCount());
+        $this->redrawControl('postsList');
+        //$this->payload->resetForm = true;
+        $this['playerPhotoFormUpload']->setValues(array(), true);
+        $this->redrawControl('playerPhotoFormUploadSnippet');         
     }
-    
-
-
-   
 
     protected function createComponentPlayerPhotoFormUpload()
     {
@@ -120,7 +139,7 @@ class PlayersPresenter extends BasePresenter
 
         $form->addSubmit("playerPhotoUploadSubmit", "Upload");
              //->onClick[] = [$this, 'playerPhotoFormUploadSubmit'];
- 
+
         $form->onValidate[] = $this->playerPhotoFormUploadCheck;
         $form->onSuccess[] = $this->playerPhotoFormUploadSubmit;
         return $form;
@@ -175,22 +194,19 @@ class PlayersPresenter extends BasePresenter
             $this->redrawControl('flashMessages');
             $this->redrawControl('playerPhotoFormUploadSnippet');
         } else {
-            
             $values->playerPhoto->move($path);
             $image = Image::fromFile($path);
             $image->resize(320, 180);
             $image->sharpen();
             $image->save($path, 80, Image::JPEG);
-            $this->redrawControl('flashMessages');
+            //$this->redrawControl('flashMessages');
             $this->flashMessage("Foto bylo nahráno", "success");
             $this->template->playerPhotoFormUploadClicked = true;
             $this->template->playerPhotoFormUploadDone = true;
             $this->template->playerPhotoName = $path;
             $this->redrawControl('playerPhotoFormUploadSnippet');
-            
-                      
         }
-     }
+    }
 
     
 
@@ -347,11 +363,12 @@ class PlayersPresenter extends BasePresenter
             foreach (Finder::findFiles('*')->in($folder) as $key => $file) {
                 $this->flashMessage("smazáno $file.", 'danger');
                 unlink($file);
-                $this->redirect(':Admin:Enemy:');
+                $this->redirect(':Admin:Enemy:');                
             }
         } else {
             $this->redirect(':Admin:Enemy:');
         }
+       
     }
 
     public function removeLogosFromStorage()
@@ -386,18 +403,11 @@ class PlayersPresenter extends BasePresenter
                 copy($file, $nfile);
                 unlink($file);
                 $this->redrawControl('postsList');
-                $this->redrawControl('flashMessages');
-                
             } else {
+                $this->flashMessage("Naše databáze již obsahuje tento soubor", "danger");                
                 $this->redrawControl('flashMessages');
-                $this->flashMessage("Naše databáze již obsahuje tento soubor", "danger");
-               
-                
             }
         }
-
-        
-
     }
 
     public function handleRemoveCacheImg($imgRealName)
@@ -406,12 +416,15 @@ class PlayersPresenter extends BasePresenter
             $this->redirect("this");
         }
         if (file_exists($imgRealName)) {
-            $this->flashMessage("Obrazek byl odstranen.", "success");
             unlink($imgRealName);
             $this->template->playerPhotoFormUploadClicked = false;
-            $this->template->playerPhotoFormUploadDone = false;  
-            $this->redrawControl('flashMessages');                      
-            $this->redrawControl('playerPhotoFormUploadSnippet');                      
+            $this->template->playerPhotoFormUploadDone = false;
+            $this->template->playerPhotoRemoved = true;
+            $this->template->playerPhotoRemovedInfo = true;
+            $this->redrawControl('flashMessages');
+            $this->redrawControl('playerPhotoFormUploadSnippet');
+
+
         } else {
             $this->flashMessage("CHYBA.", "danger");
         }
@@ -427,10 +440,10 @@ class PlayersPresenter extends BasePresenter
                 unlink($file);
                 //$this->redirect(':Admin:Players:');
                 $this->redrawControl('flashMessages');
-                $this->flashMessage("Cleared cache $dir -> $file", "info");                    
+                $this->flashMessage("Cleared cache $dir -> $file", "info");
             }
         }
-    }  
+    }
 
 
     public function handleRemoveImg($postId)

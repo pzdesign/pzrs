@@ -5,6 +5,9 @@
     function moveUploadA(img){
       $( "#playerPhoto" ).val( img );
   }
+    function removeImg(){
+      $( "#playerPhoto" ).val('');
+  }  
 
 </script>
 {snippet postsList} 
@@ -106,11 +109,11 @@
             <div class="modal-body">                 
                 <div class="row">             
                     <div class="col-sm-12 logoUploadForm">
-                        <div class="col-sm-6 col-sm-offset-3">              
-                            {snippet playerPhotoFormUploadSnippet}  
-                            click: {if $playerPhotoFormUploadClicked}TRUE{else}FALSE{/if} <br>              
-                            done: {if $playerPhotoFormUploadDone}TRUE{else}FALSE{/if}    <br>            
-                            fail: {if $playerPhotoFormUploadFail}TRUE{else}FALSE{/if}    <br>             
+                        <div class="col-sm-6 col-sm-offset-3"> 
+                        <div class="page-header">
+                          <h2><small>Avatar</small></h2>
+                        </div>                                     
+                            {snippet playerPhotoFormUploadSnippet}              
                             {form playerPhotoFormUpload, class => ajax} 
                         {if !$playerPhotoFormUploadDone }
                             <div class="form-group">  
@@ -126,22 +129,29 @@
                             <span class="text-danger" n:ifcontent>{$form['playerPhoto']->error|noescape}</span>                        
                             </div>  
                             {/if}
-                            {/form}    
+                            {/form} 
+                            {if $playerPhotoRemoved }
+                            <script>
+                                removeImg();
+                            </script>
+                            {/if}                               
                             {if $playerPhotoFormUploadClicked }
                             <script>
                                 moveUploadA({$playerPhotoName});
                             </script>
                             {if $playerPhotoFormUploadDone && $playerPhotoName} 
-                            <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/{$playerPhotoName}">
+                            <img class="upload-thumb-v img-thumbnail animated fadeIn" src="{$basePath}/{$playerPhotoName}"><br>
                             <a class="btn btn-danger btn-sm tltp ajax" title="Delete img cache" n:href="removeCacheImg! $playerPhotoName"><i class="fa fa-trash"></i></a>
-
-                            <div class="alert alert-relative alert-info animated flash">If u want to keep this photo u have to hit SAVE!</div>
                             {else}
                             <img class="upload-thumb img-thumbnail animated fadeIn" src="{$basePath}/img/empty.png">
                             <div class="alert alert-relative alert-warning animated flash">Foto neexistuje nahrajte prosím nové.<br></div>
 
                             {/if}
                             {/if} 
+                            {if $playerPhotoRemovedInfo} 
+                            <div class="alert alert-relative alert-danger animated fadeIn">Odstraněno.<br></div>
+
+                            {/if}                            
                             {/snippet}                 
                         </div>
                     </div>
@@ -158,27 +168,84 @@
             <div class="row">                  
                 <div class="col-sm-12">   
                     <div class="col-sm-6 col-sm-offset-3"> 
+                        <div class="page-header">
+                          <h2><small>Personal</small></h2>
+                        </div>                    
                         <div class="form-group {if $form['nickName']->error}has-error{else}{/if} ">                                                         
                             {label nickName /}                       
-                            {input nickName, class => "form-control col-lg-6", placeholder => "Nickname: ", required, autofocus => true} <br>  
+                            {input nickName, class => "form-control", placeholder => "Nickname: ", required, autofocus => true}
                             <span class="text-danger" n:ifcontent>{$form['nickName']->error|noescape}</span>
                         </div>
-                        <div class="form-group {if $form['firstName']->error}has-error{else}{/if} ">                                                         
+                        <div class="form-group">                                                         
                             {label firstName /}                       
-                            {input firstName, class => "form-control col-lg-6", placeholder => "First name: ", required, autofocus => true} <br>  
-                            <span class="text-danger" n:ifcontent>{$form['firstName']->error|noescape}</span>
+                            {input firstName, class => "form-control ", placeholder => "First name: "} 
                         </div>
-                        <div class="form-group {if $form['lastName']->error}has-error{else}{/if} ">                                                         
+                        <div class="form-group ">                                                         
                             {label lastName /}                       
-                            {input lastName, class => "form-control col-lg-6", placeholder => "Last name: ", required, autofocus => true} <br>  
-                            <span class="text-danger" n:ifcontent>{$form['lastName']->error|noescape}</span>
+                            {input lastName, class => "form-control ", placeholder => "Last name: "}  
                         </div>
-
+                       
+                    </div>
+                    <div class="col-sm-6 col-sm-offset-3"> 
+                        <div class="page-header">
+                          <h2><small>Info</small></h2>
+                        </div> 
+                    </div>                                                                       
+                    <div class="col-sm-6 col-sm-offset-3">
+                        <div class="form-group">                                                         
+                            {label mouse /}                       
+                            {input mouse, class => "form-control input-sm", placeholder => "Mouse: "} 
+                        </div>
+                        <div class="form-group">                                                         
+                            {label keyboard /}                       
+                            {input keyboard, class => "form-control input-sm", placeholder => "Keyboard: "}  
+                        </div>
+                        <div class="form-group">                                                         
+                            {label headphones /}                       
+                            {input headphones, class => "form-control input-sm", placeholder => "Headphones: "} 
+                        </div> 
+                        <div class="form-group">                                                         
+                            {label cpu /}                       
+                            {input cpu, class => "form-control input-sm", placeholder => "CPU: "} 
+                        </div> 
+                        <div class="form-group">                                                         
+                            {label gpu /}                       
+                            {input gpu, class => "form-control input-sm", placeholder => "GPU: "} 
+                        </div> 
+                        <div class="form-group">                                                         
+                            {label sensitivity /}                       
+                            {input sensitivity, class => "form-control input-sm", placeholder => "Sensitivity: "} 
+                        </div>
+                        <div class="form-group">                                                         
+                            {label resolution /}                       
+                            {input resolution, class => "form-control input-sm", placeholder => "Resolution: "} 
+                        </div>                                                                                                                                                 
                         <div class="col-sm-12">
                             {label playerPhotoInForm /}                       
-                            {input playerPhotoInForm, class => "form-control", required} <br> 
+                            {input playerPhotoInForm, class => "form-control input-sm", required} <br> 
                         </div>          
-                    </div>    
+                    </div>
+                    <div class="col-sm-6 col-sm-offset-3"> 
+                        <div class="page-header">
+                          <h2><small>Social</small></h2>
+                        </div>
+                        <div class="form-group">                                                         
+                            {label facebook /}                       
+                            {input facebook, class => "form-control input-sm", placeholder => "Facebook: "} 
+                        </div> 
+                        <div class="form-group">                                                         
+                            {label twitch /}                       
+                            {input twitch, class => "form-control input-sm", placeholder => "Twitch: "} 
+                        </div> 
+                        <div class="form-group">                                                         
+                            {label twitter /}                       
+                            {input twitter, class => "form-control input-sm", placeholder => "Twitter: "} 
+                        </div>   
+                        <div class="form-group">                                                         
+                            {label steam /}                       
+                            {input steam, class => "form-control input-sm", placeholder => "Steam: "} 
+                        </div>                                                                                               
+                    </div>                        
                 </div>
             </div>
         </div>                    

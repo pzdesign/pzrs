@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.4.14
 -- http://www.phpmyadmin.net
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Úte 05. dub 2016, 18:01
--- Verze serveru: 10.1.9-MariaDB
--- Verze PHP: 5.6.15
+-- Vytvořeno: Stř 06. dub 2016, 00:28
+-- Verze serveru: 5.6.26
+-- Verze PHP: 5.6.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -26,13 +26,13 @@ SET time_zone = "+00:00";
 -- Struktura tabulky `pzrs_enemy`
 --
 
-CREATE TABLE `pzrs_enemy` (
+CREATE TABLE IF NOT EXISTS `pzrs_enemy` (
   `id` int(11) NOT NULL,
   `teamA` text COLLATE utf8_unicode_ci NOT NULL,
   `teamALogo` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Vypisuji data pro tabulku `pzrs_enemy`
@@ -40,8 +40,8 @@ CREATE TABLE `pzrs_enemy` (
 
 INSERT INTO `pzrs_enemy` (`id`, `teamA`, `teamALogo`, `created_at`, `active`) VALUES
 (8, 'eTuba', 'upload/enemy\\1400154456053082.jpg', '0000-00-00 00:00:00', 0),
-(9, 'Penguinsasdasd', 'upload/enemy\\lighthouse.jpg', '0000-00-00 00:00:00', 0),
-(10, 'asdasdasd', 'upload/enemy/jellyfish.jpg', '2016-04-05 15:39:58', 0);
+(9, 'Penguinsasdasd', 'upload/enemy\\desert.jpg', '0000-00-00 00:00:00', 0),
+(10, 'asdasdasd', 'upload/enemy/jellyfish.jpg', '0000-00-00 00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -49,7 +49,7 @@ INSERT INTO `pzrs_enemy` (`id`, `teamA`, `teamALogo`, `created_at`, `active`) VA
 -- Struktura tabulky `pzrs_events`
 --
 
-CREATE TABLE `pzrs_events` (
+CREATE TABLE IF NOT EXISTS `pzrs_events` (
   `id` int(11) NOT NULL,
   `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `teaser` text COLLATE utf8_unicode_ci NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE `pzrs_events` (
 -- Struktura tabulky `pzrs_gallery`
 --
 
-CREATE TABLE `pzrs_gallery` (
+CREATE TABLE IF NOT EXISTS `pzrs_gallery` (
   `id` int(11) NOT NULL,
   `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `private` int(11) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE `pzrs_gallery` (
 -- Struktura tabulky `pzrs_images`
 --
 
-CREATE TABLE `pzrs_images` (
+CREATE TABLE IF NOT EXISTS `pzrs_images` (
   `id` int(11) NOT NULL,
   `name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `galleryid` int(100) NOT NULL,
@@ -95,13 +95,13 @@ CREATE TABLE `pzrs_images` (
 -- Struktura tabulky `pzrs_maps`
 --
 
-CREATE TABLE `pzrs_maps` (
+CREATE TABLE IF NOT EXISTS `pzrs_maps` (
   `id` int(11) NOT NULL,
   `mapName` text COLLATE utf8_unicode_ci NOT NULL,
   `info` text COLLATE utf8_unicode_ci NOT NULL,
   `mapImg` text COLLATE utf8_unicode_ci NOT NULL,
   `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Vypisuji data pro tabulku `pzrs_maps`
@@ -122,7 +122,7 @@ INSERT INTO `pzrs_maps` (`id`, `mapName`, `info`, `mapImg`, `active`) VALUES
 -- Struktura tabulky `pzrs_matches`
 --
 
-CREATE TABLE `pzrs_matches` (
+CREATE TABLE IF NOT EXISTS `pzrs_matches` (
   `id` int(11) NOT NULL,
   `teamA` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `teamB` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
@@ -144,7 +144,7 @@ CREATE TABLE `pzrs_matches` (
   `created_at` timestamp NULL DEFAULT NULL,
   `edited_at` timestamp NULL DEFAULT NULL,
   `canBeEdited` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Vypisuji data pro tabulku `pzrs_matches`
@@ -159,25 +159,33 @@ INSERT INTO `pzrs_matches` (`id`, `teamA`, `teamB`, `resultA`, `resultB`, `win`,
 -- Struktura tabulky `pzrs_players`
 --
 
-CREATE TABLE `pzrs_players` (
+CREATE TABLE IF NOT EXISTS `pzrs_players` (
   `id` int(11) NOT NULL,
   `nickname` text COLLATE utf8_unicode_ci NOT NULL,
   `firstname` text COLLATE utf8_unicode_ci NOT NULL,
   `lastname` text COLLATE utf8_unicode_ci NOT NULL,
   `playerphoto` text COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `mouse` text COLLATE utf8_unicode_ci NOT NULL,
+  `keyboard` text COLLATE utf8_unicode_ci NOT NULL,
+  `headphones` text COLLATE utf8_unicode_ci NOT NULL,
+  `cpu` text COLLATE utf8_unicode_ci NOT NULL,
+  `gpu` text COLLATE utf8_unicode_ci NOT NULL,
+  `sensitivity` text COLLATE utf8_unicode_ci NOT NULL,
+  `resolution` text COLLATE utf8_unicode_ci NOT NULL,
+  `facebook` text COLLATE utf8_unicode_ci NOT NULL,
+  `twitch` text COLLATE utf8_unicode_ci NOT NULL,
+  `twitter` text COLLATE utf8_unicode_ci NOT NULL,
+  `steam` text COLLATE utf8_unicode_ci NOT NULL,
   `active` int(11) NOT NULL DEFAULT '1'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Vypisuji data pro tabulku `pzrs_players`
 --
 
-INSERT INTO `pzrs_players` (`id`, `nickname`, `firstname`, `lastname`, `playerphoto`, `created_at`, `active`) VALUES
-(1, 'dasdasd', 'das', 'asdas', 'upload/players/image-1.jpg', '2016-04-05 15:51:04', 1),
-(2, 'dasdas', 'das', 'asdas', 'upload/players/image-6.jpg', '2016-04-05 15:51:57', 1),
-(3, 'dasdasd', 'das', 'asdas', 'upload/players/tulips.jpg', '2016-04-05 15:54:14', 1),
-(4, 'asd', 'asd', 'asdasd', 'upload/players/image-3.jpg', '2016-04-05 15:54:26', 1);
+INSERT INTO `pzrs_players` (`id`, `nickname`, `firstname`, `lastname`, `playerphoto`, `created_at`, `mouse`, `keyboard`, `headphones`, `cpu`, `gpu`, `sensitivity`, `resolution`, `facebook`, `twitch`, `twitter`, `steam`, `active`) VALUES
+(53, 'Flashk', 'Patrik', 'Žižka', 'upload/players/koala.jpg', '2016-04-05 22:22:18', 'Razer  DeathAdder 2013', 'Roccat Ryos MK', 'SteelSeries Siberia V2', 'i5 2500k', 'GTX 960', '4', '1920x1080', 'https://www.facebook.com/officialflashk/', 'https://www.twitch.tv/flashiiik', '', '', 1);
 
 -- --------------------------------------------------------
 
@@ -185,7 +193,7 @@ INSERT INTO `pzrs_players` (`id`, `nickname`, `firstname`, `lastname`, `playerph
 -- Struktura tabulky `pzrs_posts`
 --
 
-CREATE TABLE `pzrs_posts` (
+CREATE TABLE IF NOT EXISTS `pzrs_posts` (
   `id` int(11) NOT NULL,
   `title` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `teaser` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -198,7 +206,7 @@ CREATE TABLE `pzrs_posts` (
   `slug` text COLLATE utf8_unicode_ci NOT NULL,
   `active` int(11) NOT NULL DEFAULT '1',
   `res1` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Vypisuji data pro tabulku `pzrs_posts`
@@ -208,8 +216,8 @@ INSERT INTO `pzrs_posts` (`id`, `title`, `teaser`, `body`, `img`, `created_at`, 
 (1, 'asda', 'dasd', '<p>asdas</p>', 'upload/posts\\lighthouse.jpg', '2016-03-26 19:17:05', NULL, '', '', 'asda', 1, 0),
 (2, 'asd', 'asd', '<p>asdsad</p>', 'upload/posts\\tulips.jpg', '2016-03-26 21:55:20', NULL, '', '', 'asd', 1, 0),
 (3, 'dasdasd', 'das', '<p>asdas</p>', 'upload/posts/chrysanthemum.jpg', '2016-03-27 13:32:51', NULL, '', '', 'dasdasd', 1, 0),
-(4, 'sadasd', 'asd', '<p>asdsad</p>', 'upload/posts\\hydrangeas.jpg', '2016-03-27 13:33:01', '2016-03-27 17:00:09', '', '', '0', 0, 0),
-(5, 'asdasd', 'dasd', '<p>asdas</p>', 'upload/posts/image-2.jpg', '2016-04-05 15:04:57', NULL, '', '', 'asdasd', 0, 0);
+(4, 'sadasd', 'asd', '<p>asdsad</p>', 'upload/posts\\hydrangeas.jpg', '2016-03-27 13:33:01', '2016-03-27 17:00:09', '', '', '0', 1, 0),
+(5, 'asdasd', 'dasd', '<p>asdas</p>', 'upload/posts\\jellyfish.jpg', '2016-04-05 15:04:57', NULL, '', '', 'asdasd', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -217,7 +225,7 @@ INSERT INTO `pzrs_posts` (`id`, `title`, `teaser`, `body`, `img`, `created_at`, 
 -- Struktura tabulky `pzrs_settings`
 --
 
-CREATE TABLE `pzrs_settings` (
+CREATE TABLE IF NOT EXISTS `pzrs_settings` (
   `id` int(11) NOT NULL,
   `fb_app_secret` text COLLATE utf8_unicode_ci NOT NULL,
   `fb_access_token` longtext COLLATE utf8_unicode_ci NOT NULL,
@@ -233,13 +241,13 @@ CREATE TABLE `pzrs_settings` (
 -- Struktura tabulky `pzrs_teams`
 --
 
-CREATE TABLE `pzrs_teams` (
+CREATE TABLE IF NOT EXISTS `pzrs_teams` (
   `id` int(11) NOT NULL,
   `teamA` text COLLATE utf8_unicode_ci NOT NULL,
   `teamALogo` text COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Vypisuji data pro tabulku `pzrs_teams`
@@ -256,7 +264,7 @@ INSERT INTO `pzrs_teams` (`id`, `teamA`, `teamALogo`, `created_at`, `active`) VA
 -- Struktura tabulky `pzrs_users`
 --
 
-CREATE TABLE `pzrs_users` (
+CREATE TABLE IF NOT EXISTS `pzrs_users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -264,7 +272,7 @@ CREATE TABLE `pzrs_users` (
   `ip` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `role` int(11) NOT NULL,
   `active` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Vypisuji data pro tabulku `pzrs_users`
@@ -352,7 +360,7 @@ ALTER TABLE `pzrs_users`
 -- AUTO_INCREMENT pro tabulku `pzrs_enemy`
 --
 ALTER TABLE `pzrs_enemy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_events`
 --
@@ -372,22 +380,22 @@ ALTER TABLE `pzrs_images`
 -- AUTO_INCREMENT pro tabulku `pzrs_maps`
 --
 ALTER TABLE `pzrs_maps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_matches`
 --
 ALTER TABLE `pzrs_matches`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=93;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_players`
 --
 ALTER TABLE `pzrs_players`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=54;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_posts`
 --
 ALTER TABLE `pzrs_posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_settings`
 --
@@ -397,12 +405,12 @@ ALTER TABLE `pzrs_settings`
 -- AUTO_INCREMENT pro tabulku `pzrs_teams`
 --
 ALTER TABLE `pzrs_teams`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_users`
 --
 ALTER TABLE `pzrs_users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

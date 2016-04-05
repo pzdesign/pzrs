@@ -951,8 +951,13 @@ color: #FFF;
   text-align:center;
   width:320px;
   height:180px;
+}
 
-
+.upload-thumb-v {
+  position:relative;
+  text-align:center;
+  width:280px;
+  height:280px;
 }
 
 .img-small {
@@ -1062,6 +1067,10 @@ td.lose  {
 
 }
 
-
+.page-header {
+    padding-bottom: 9.5px;
+    margin: 0px 0 21px;
+    border-bottom: 1px solid #e6e6e6;
+}
 
 .required label { color: maroon }
