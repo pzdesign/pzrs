@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Úte 29. bře 2016, 17:49
+-- Vytvořeno: Úte 05. dub 2016, 18:01
 -- Verze serveru: 10.1.9-MariaDB
 -- Verze PHP: 5.6.15
 
@@ -40,7 +40,8 @@ CREATE TABLE `pzrs_enemy` (
 
 INSERT INTO `pzrs_enemy` (`id`, `teamA`, `teamALogo`, `created_at`, `active`) VALUES
 (8, 'eTuba', 'upload/enemy\\1400154456053082.jpg', '0000-00-00 00:00:00', 0),
-(9, 'Penguinsasdasd', 'upload/enemy\\lighthouse.jpg', '0000-00-00 00:00:00', 0);
+(9, 'Penguinsasdasd', 'upload/enemy\\lighthouse.jpg', '0000-00-00 00:00:00', 0),
+(10, 'asdasdasd', 'upload/enemy/jellyfish.jpg', '2016-04-05 15:39:58', 0);
 
 -- --------------------------------------------------------
 
@@ -107,8 +108,8 @@ CREATE TABLE `pzrs_maps` (
 --
 
 INSERT INTO `pzrs_maps` (`id`, `mapName`, `info`, `mapImg`, `active`) VALUES
-(23, 'Dust2', '', 'upload/maps/dust2.jpg', 0),
-(24, 'Cache', '', 'upload/maps/cache.jpg', 0),
+(23, 'Dust2', '', 'upload/maps/dust2.jpg', 1),
+(24, 'Cache', '', 'upload/maps/cache.jpg', 1),
 (25, 'Train', '', 'upload/maps/train.jpg', 0),
 (26, 'Inferno', '', 'upload/maps/inferno.jpg', 0),
 (27, 'Mirage', '', 'upload/maps/mirage.jpg', 0),
@@ -155,6 +156,32 @@ INSERT INTO `pzrs_matches` (`id`, `teamA`, `teamB`, `resultA`, `resultB`, `win`,
 -- --------------------------------------------------------
 
 --
+-- Struktura tabulky `pzrs_players`
+--
+
+CREATE TABLE `pzrs_players` (
+  `id` int(11) NOT NULL,
+  `nickname` text COLLATE utf8_unicode_ci NOT NULL,
+  `firstname` text COLLATE utf8_unicode_ci NOT NULL,
+  `lastname` text COLLATE utf8_unicode_ci NOT NULL,
+  `playerphoto` text COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `active` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Vypisuji data pro tabulku `pzrs_players`
+--
+
+INSERT INTO `pzrs_players` (`id`, `nickname`, `firstname`, `lastname`, `playerphoto`, `created_at`, `active`) VALUES
+(1, 'dasdasd', 'das', 'asdas', 'upload/players/image-1.jpg', '2016-04-05 15:51:04', 1),
+(2, 'dasdas', 'das', 'asdas', 'upload/players/image-6.jpg', '2016-04-05 15:51:57', 1),
+(3, 'dasdasd', 'das', 'asdas', 'upload/players/tulips.jpg', '2016-04-05 15:54:14', 1),
+(4, 'asd', 'asd', 'asdasd', 'upload/players/image-3.jpg', '2016-04-05 15:54:26', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabulky `pzrs_posts`
 --
 
@@ -181,7 +208,8 @@ INSERT INTO `pzrs_posts` (`id`, `title`, `teaser`, `body`, `img`, `created_at`, 
 (1, 'asda', 'dasd', '<p>asdas</p>', 'upload/posts\\lighthouse.jpg', '2016-03-26 19:17:05', NULL, '', '', 'asda', 1, 0),
 (2, 'asd', 'asd', '<p>asdsad</p>', 'upload/posts\\tulips.jpg', '2016-03-26 21:55:20', NULL, '', '', 'asd', 1, 0),
 (3, 'dasdasd', 'das', '<p>asdas</p>', 'upload/posts/chrysanthemum.jpg', '2016-03-27 13:32:51', NULL, '', '', 'dasdasd', 1, 0),
-(4, 'sadasd', 'asd', '<p>asdsad</p>', 'upload/posts\\hydrangeas.jpg', '2016-03-27 13:33:01', '2016-03-27 17:00:09', '', '', '0', 0, 0);
+(4, 'sadasd', 'asd', '<p>asdsad</p>', 'upload/posts\\hydrangeas.jpg', '2016-03-27 13:33:01', '2016-03-27 17:00:09', '', '', '0', 0, 0),
+(5, 'asdasd', 'dasd', '<p>asdas</p>', 'upload/posts/image-2.jpg', '2016-04-05 15:04:57', NULL, '', '', 'asdasd', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -286,6 +314,12 @@ ALTER TABLE `pzrs_matches`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Klíče pro tabulku `pzrs_players`
+--
+ALTER TABLE `pzrs_players`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Klíče pro tabulku `pzrs_posts`
 --
 ALTER TABLE `pzrs_posts`
@@ -318,7 +352,7 @@ ALTER TABLE `pzrs_users`
 -- AUTO_INCREMENT pro tabulku `pzrs_enemy`
 --
 ALTER TABLE `pzrs_enemy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_events`
 --
@@ -345,10 +379,15 @@ ALTER TABLE `pzrs_maps`
 ALTER TABLE `pzrs_matches`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 --
+-- AUTO_INCREMENT pro tabulku `pzrs_players`
+--
+ALTER TABLE `pzrs_players`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
 -- AUTO_INCREMENT pro tabulku `pzrs_posts`
 --
 ALTER TABLE `pzrs_posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT pro tabulku `pzrs_settings`
 --
